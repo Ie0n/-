@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.feng.version1.Task.TaskActivity">
+
+    <RelativeLayout
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="8dp">
+
+        <include
+            android:id="@+id/lay1"
+            layout="@layout/task_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"/>
+        <com.example.feng.version1.Viemitem.Bottom
+            android:id="@+id/b1"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="#40ADADAD"
+            android:layout_alignParentBottom="true">
+        </com.example.feng.version1.Viemitem.Bottom>
+
+    </RelativeLayout>
+
+
+
+
+</android.support.constraint.ConstraintLayout>

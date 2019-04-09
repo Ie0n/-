@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+   <ListView
+   android:layout_width="match_parent"
+   android:layout_height="wrap_content"
+   android:id="@+id/lv1"
+       android:layout_alignParentLeft="true"
+       android:layout_alignParentStart="true"
+       android:layout_alignParentTop="true">
+   </ListView>
+   <!--<TextView-->
+       <!--android:id="@+id/t1"-->
+       <!--android:layout_width="wrap_content"-->
+       <!--android:layout_height="wrap_content"-->
+       <!--android:text="设备编号"-->
+       <!--android:textSize="80px"-->
+       <!--android:layout_centerHorizontal="true"/>-->
+   <!--<TextView-->
+       <!--android:id="@+id/deviceID"-->
+       <!--android:layout_below="@id/t1"-->
+       <!--android:layout_width="wrap_content"-->
+       <!--android:layout_height="wrap_content"-->
+       <!--android:text="设备编号"-->
+       <!--android:textSize="60px"-->
+       <!--android:layout_centerHorizontal="true"/>-->
+   <!--<ScrollView-->
+       <!--android:layout_width="match_parent"-->
+       <!--android:layout_height="wrap_content"-->
+       <!--android:orientation="vertical" >-->
+      <!--<LinearLayout-->
+          <!--android:layout_width="match_parent"-->
+          <!--android:layout_height="wrap_content"-->
+          <!--android:orientation="vertical"-->
+          <!--android:paddingTop="15dip" >-->
+         <!--<ListView-->
+             <!--android:layout_width="match_parent"-->
+             <!--android:layout_height="wrap_content"-->
+             <!--android:id="@+id/lv1">-->
+         <!--</ListView>-->
+      <!--</LinearLayout>-->
+
+   <!--</ScrollView>-->
+</RelativeLayout>

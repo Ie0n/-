@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.feng.version1.Task.TaskActivity">
+    <RelativeLayout
+        android:id="@+id/sport_main_barlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:scaleType="fitXY"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:src="@drawable/shouye"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:background="#60ADADAD"/>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:orientation="vertical"
+            android:fitsSystemWindows="true"
+            >
+            <TextView
+                android:id="@+id/sport_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="首页"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textSize="23dp" />
+
+        </android.support.v7.widget.Toolbar>
+        <TextView
+            android:id="@+id/usrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="80px"
+            android:layout_below="@id/toolbar"
+            android:text="your id"
+            android:layout_centerHorizontal="true"/>
+
+    </RelativeLayout>
+
+    <!--在这里写任务界面的主要内容 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sport_main_barlay"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true">
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/sport_icon"
+            android:layout_marginLeft="10dp"
+            android:layout_alignTop="@+id/textView1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:layout_toRightOf="@id/icon"
+            android:gravity="center"
+            android:text="任务开始"
+            android:textColor="@color/grey21"
+            android:textSize="16dp" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView1"
+            android:text="设备列表"
+            android:layout_marginLeft="35dp"
+            android:textSize="16dp"
+            android:textColor="@color/black"/>
+        <RelativeLayout
+            android:id="@+id/r1"
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textView2"
+            android:layout_alignStart="@+id/textView2"
+            android:layout_alignLeft="@+id/textView2">
+            <LinearLayout
+                android:id="@+id/linear1"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@color/qianhui"
+                android:layout_marginRight="30dp">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/blet" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="设备1"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="点击输入>"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/r2"
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/r1"
+            android:layout_alignStart="@+id/r1"
+            android:layout_alignLeft="@+id/r1">
+            <LinearLayout
+                android:id="@+id/linear2"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@color/cornflowerblue"
+                android:layout_marginRight="30dp">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="25dp"
+                    android:layout_height="27dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/blet" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="设备2"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="点击输入>"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/r3"
+            android:paddingTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/r2"
+            android:layout_alignStart="@+id/r2"
+            android:layout_alignLeft="@+id/r2">
+            <LinearLayout
+                android:id="@+id/linear3"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="30dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@color/powderblue"
+                android:layout_marginRight="30dp">
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/blet" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="设备3"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_gravity="center"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="点击输入>"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+        </RelativeLayout>
+        <Button
+            android:id="@+id/uploading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/r3"
+            android:layout_centerHorizontal="true"
+            android:text="提交"
+            android:layout_marginTop="10dp"/>
+    </RelativeLayout>
+
+
+</RelativeLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="41dp"
+    android:layout_alignParentBottom="true"
+    >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:id="@+id/hengtiaoo"
+        android:background="@color/jiangetiao" />
+    <LinearLayout
+        android:layout_below="@id/hengtiaoo"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+        <Button
+            android:id="@+id/task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/click"
+
+            android:text="任务"/>
+
+        <Button
+            android:id="@+id/anayse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/click"
+
+            android:text="数据统计"
+            />
+
+        <Button
+            android:id="@+id/my_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/click"
+
+            android:text="我的"
+            />
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>
+
