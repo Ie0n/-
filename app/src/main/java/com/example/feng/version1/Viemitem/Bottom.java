@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.feng.version1.R;
-import com.example.feng.version1.Task.TaskActivity;
+import com.example.feng.version1.Task.MainActivity;
 import com.example.feng.version1.DataAnalyse.DataAnalyse;
 import com.example.feng.version1.MyHome.MyHome;
 
@@ -49,7 +49,7 @@ public class Bottom extends LinearLayout implements View.OnClickListener {
 //                activity_from.startActivity(intent_homepage);
 //                break;
             case R.id.task:
-                Intent intent_states = new Intent(activity_from,TaskActivity.class);
+                Intent intent_states = new Intent(activity_from,MainActivity.class);
                 activity_from.startActivity(intent_states);
                 break;
             case R.id.anayse:

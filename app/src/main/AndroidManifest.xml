@@ -39,7 +39,7 @@
 
         <!-- （主）登录界面 -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +49,7 @@
         </activity>
         <!-- 任务相关界面 -->
         <activity
-            android:name=".Task.TaskActivity"
+            android:name=".Task.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Task.MeterNum"

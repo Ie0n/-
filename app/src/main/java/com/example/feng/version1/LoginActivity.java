@@ -2,30 +2,23 @@ package com.example.feng.version1;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Build;
-import android.os.Looper;
 import android.support.annotation.NonNull;
-import android.support.v4.print.PrintHelper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.webkit.WebView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.feng.version1.Task.TaskActivity;
+import com.example.feng.version1.Task.MainActivity;
 
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,EasyPermissions.PermissionCallbacks {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener,EasyPermissions.PermissionCallbacks {
 
     /**************基本变量**************/
     private EditText username;
@@ -41,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         /******
          * 设置状态栏透明
@@ -76,21 +69,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                // 封装用户名信息
 //                intent_a.putExtra("USERNAME", user_name);
 //                intent_a.putExtra("PASSWORD",pass_word);
-//                intent_a.setClass(MainActivity.this,TaskActivity.class);// 制定传递对象
+//                intent_a.setClass(LoginActivity.this,MainActivity.class);// 制定传递对象
 //                startActivity(intent_a);
 
 
                 //需要密码登录
-                 result=login();
-                if(1==result)
-                {
+//                 result=login();
+//                if(1==result)
+//                {
                     Intent intent_a = new Intent();
                     // 封装用户名信息
-                    intent_a.putExtra("USERNAME", user_name);
-                    intent_a.putExtra("PASSWORD",pass_word);
-                    intent_a.setClass(MainActivity.this,TaskActivity.class);// 制定传递对象
+//                    intent_a.putExtra("USERNAME", user_name);
+//                    intent_a.putExtra("PASSWORD",pass_word);
+                    intent_a.setClass(LoginActivity.this,MainActivity.class);// 制定传递对象
                     startActivity(intent_a);
-                }
+//                }
                 break;
             default:
                 break;
@@ -110,11 +103,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
          user_name = username.getText().toString();
          pass_word = password.getText().toString();
         if (null == username || user_name.length() <= 0) {
-            Toast.makeText(MainActivity.this, "请输入账号！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "请输入账号！", Toast.LENGTH_SHORT).show();
             return 0;
         }
         if (null == pass_word || pass_word.length() <= 0) {
-            Toast.makeText(MainActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "请输入密码！", Toast.LENGTH_SHORT).show();
             return 0;
         }
         if (user_name.equals("1")  && pass_word.equals("1")) {

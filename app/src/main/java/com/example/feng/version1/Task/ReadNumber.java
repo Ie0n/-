@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.feng.version1.MainActivity;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
 import com.google.gson.Gson;

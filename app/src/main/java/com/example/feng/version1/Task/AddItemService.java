@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 
 import com.example.feng.version1.Public.PublicData;
 

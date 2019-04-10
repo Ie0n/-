@@ -1,117 +1,45 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tab_host"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/denglu2"
-        android:scaleType="fitXY" />
+        android:layout_height="match_parent">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/main_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <FrameLayout
+            android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/tab_divider"
+            android:visibility="gone"/>
+
+        <!-- View是Tab与上面ViewPager的分割线-->
+        <View
+            android:id="@+id/tab_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@android:id/tabs"
+            android:background="#dfdfdf" />
 
 
-    <EditText
-        android:textCursorDrawable="@drawable/edit_cursor_color"
-        android:textSize="15dp"
-        android:id="@+id/username_edit"
-        android:layout_width="300dp"
-        android:layout_height="43dp"
-        android:singleLine="true"
-        android:hint="账号"
-        android:inputType="text"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="230dp"
-        android:textColor="@color/white"
-        android:background="@drawable/conner_editview"/>
-
-    <ImageView
-        android:id="@+id/tubiao_1"
-        android:layout_marginTop="130dp"
-        android:layout_width="60dp"
-        android:layout_alignLeft="@id/username_edit"
-        android:layout_height="60dp"/>
-        <!--android:src="@drawable/ic_favorite_white_24dp"-->
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/tubiao_1"
-        android:layout_toRightOf="@id/tubiao_1"
-        android:text="仪表数据存取"
-        android:textColor="@color/white"
-        android:textSize="30dp" />
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:showDividers="none"
+            android:translationZ="11dp"
+            android:layout_alignParentBottom="true"/>
 
 
+    </RelativeLayout>
 
-
-    <EditText
-        android:textCursorDrawable="@drawable/edit_cursor_color"
-        android:layout_below="@id/username_edit"
-        android:id="@+id/password_edit"
-        android:layout_width="300dp"
-        android:layout_height="43dp"
-        android:textSize="15dp"
-        android:hint="密码"
-        android:password="true"
-        android:singleLine="true"
-        android:inputType="textPassword"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="17dp"
-        android:textColor="@color/white"
-        android:background="@drawable/conner_editview"/>
-    <!--
-    <CheckBox
-        android:id="@+id/remember_pwd"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="记住密码"
-        android:layout_alignBaseline="@+id/auto_login"
-        android:layout_alignBottom="@+id/auto_login"
-        android:layout_alignStart="@+id/password_edit"
-        android:textColor="#BFBFBF"
-        android:textSize="13dp"
-        android:textColorLink="@color/colorPrimary"
-        tools:ignore="RtlCompat" />
-    <CheckBox
-        android:id="@+id/auto_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/password_edit"
-        android:layout_marginTop="5dp"
-        android:layout_alignRight="@id/password_edit"
-        android:text="自动登录"
-        android:textSize="13dp"
-        android:textColor="#BFBFBF"
-        android:textColorHint="@color/colorPrimary"
-        />
-    -->
-
-    <Button
-        android:id="@+id/signin_button"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_below="@id/password_edit"
-        android:layout_centerHorizontal="true"
-        android:focusableInTouchMode="false"
-        android:text="确认登陆"
-        android:textColor="@color/white"
-        android:textSize="17dp"
-        android:background="@drawable/button"/>
-    <!--
-    <TextView
-        android:id="@+id/register_link"
-        android:text="@string/login_register_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/signin_button"
-        android:layout_alignBottom="@id/signin_button"
-        android:textSize="13dp"
-        android:layout_marginLeft="15dp"
-        android:textColor="#BFBFBF"
-        />
-        -->
-
-
-</RelativeLayout>
+</TabHost>

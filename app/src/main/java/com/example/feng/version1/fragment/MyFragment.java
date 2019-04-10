@@ -1,0 +1,15 @@
+package com.example.feng.version1.fragment;
+
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+
+public class MyFragment extends Fragment {
+    public static MyFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        MyFragment fragment = new MyFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+}
