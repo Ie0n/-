@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -30,6 +29,7 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -51,21 +51,8 @@
         <activity
             android:name=".Task.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".Task.MeterNum"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Task.ReadNumber"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- 数据分析界面 -->
-        <activity
-            android:name=".DataAnalyse.DataAnalyse"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <!-- 我的界面 -->
-        <activity
-            android:name=".MyHome.MyHome"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <!--扫码界面-->
         <activity
@@ -73,19 +60,14 @@
             android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="portrait" >
         </activity>
+        <activity android:name=".AddEquipmentActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Task.SelectTabActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".UserActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".EditUserInfoActivity" />
 
-
-        <!-- 服务 -->
-        <!-- 本地连接阿里云服务器 -->
-        <service
-            android:name=".localtoservice"
-            android:enabled="true"
-            android:exported="true" />
-        <!--本地添加数据至SQLite数据库-->
-        <service
-            android:name=".Task.AddItemService"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>

@@ -26,15 +26,13 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import java.util.ArrayList;
 
 public class ReadNumber extends AppCompatActivity implements View.OnClickListener{
-    private String deviceid;
+    private String device,tab;
     private String meterid;
     private Button speechr;
     private Button textin;
     private EditText editxt;
-    private TextView txt,dev,met,to,lo;
-    private Cursor cursor;
+    private TextView tabTv,devTv,txtTv;
     /**辅助变量**/
-    private double toptext,lowtext;
     private String d,m,result_speech,result_edit;
 
     @Override
@@ -49,24 +47,20 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
         Intent intent_task = getIntent();
-        deviceid = intent_task.getStringExtra("DEVICE");
-        meterid = intent_task.getStringExtra("METER");
+        device = intent_task.getStringExtra("device");
+        tab = intent_task.getStringExtra("tab");
 
         //初始化SDK
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5c7b8620");
         findview();
         //设置文本框内容
-        dev.setText(deviceid);
-        met.setText(meterid);
-
-        set_to_lo();
-
+        devTv.setText(device);
+        tabTv.setText(tab);
     }
     private void findview(){
-        dev =(TextView)findViewById(R.id.deviceread);
-        met = (TextView)findViewById(R.id.meterread);
-        to = (TextView)findViewById(R.id.top);
-        lo = (TextView)findViewById(R.id.low);
+        devTv = findViewById(R.id.device_read);
+        tabTv = findViewById(R.id.tab_read);
+
         speechr=(Button)findViewById(R.id.yuyin);
         speechr.setOnClickListener(this);
 
@@ -74,24 +68,8 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         textin.setOnClickListener(this);
 
         editxt=(EditText)findViewById(R.id.edit_nn);
-        txt=(TextView)findViewById(R.id.resultnum);
+        txtTv=(TextView)findViewById(R.id.resultnum);
 
-    }
-    public void set_to_lo(){
-        cursor = PublicData.db.query("TOTA",null,null,null,null,null,null);
-        if(cursor.moveToFirst()){
-            do{
-                d = cursor.getString(cursor.getColumnIndex("device"));
-                m = cursor.getString(cursor.getColumnIndex("meter"));
-                if( d.equals(deviceid) && m.equals((meterid))){
-                    toptext = Double.parseDouble(cursor.getString(cursor.getColumnIndex("top")));
-                    lowtext = Double.parseDouble(cursor.getString(cursor.getColumnIndex("low")));
-                }
-            }while (cursor.moveToNext());
-        }
-        cursor.close();
-        to.setText(Double.toString(toptext));
-        lo.setText(Double.toString(lowtext));
     }
 
     public void initSpeech(final Context context) {
@@ -109,7 +87,7 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
                     //返回的result为识别后的汉字,直接赋值到TextView上即可
                     result_speech = parseVoice(recognizerResult.getResultString());
                     //设置文本框内容
-                    txt.setText(result_speech);
+                    txtTv.setText(result_speech);
                 }
             }
 

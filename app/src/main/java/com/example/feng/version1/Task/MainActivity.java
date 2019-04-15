@@ -1,14 +1,6 @@
 package com.example.feng.version1.Task;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,45 +8,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
-import com.example.feng.version1.Viemitem.Bottom;
-import com.example.feng.version1.db.MyDatabaseHelper;
-import com.example.feng.version1.db.myDatabasedeviceHelper;
-import com.example.feng.version1.fragment.CountFragment;
-import com.example.feng.version1.fragment.MyFragment;
-import com.example.feng.version1.fragment.TaskFragment;
-import com.example.feng.version1.localtoservice;
-import com.yzq.testzxing.zxing.android.CaptureActivity;
-
-import static com.example.feng.version1.Public.PublicData.content;
+import com.example.feng.version1.fragments.TableFragment;
+import com.example.feng.version1.fragments.MyFragment;
+import com.example.feng.version1.fragments.TaskFragment;
 
 public class MainActivity extends AppCompatActivity implements TabHost.TabContentFactory {
-    /**************基本变量**************/
-    private String username;
-    private String password;
-    private TextView userid;
-    private LinearLayout device1;
-    private LinearLayout device2;
-    private LinearLayout device3;
-    private Button upload;
-    private Bottom bottom;
-
-    private Cursor cursor;
-    /**扫码相关**/
-    private static final String DECODED_CONTENT_KEY = "codedContent";
-    private static final String DECODED_BITMAP_KEY = "codedBitmap";
-    private static final int REQUEST_CODE_SCAN = 0x0000;
-
-    private String itemurl,itemdev,queryresult;
 
     private ViewPager mViewPager;
     private TabHost mTabHost;
@@ -65,54 +29,11 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /******
-         * 设置状态栏透明
-         * **/
         initView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
-
-
-    }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        this.getSupportFragmentManager().findFragmentByTag(TaskFragment.class.getSimpleName()).onActivityResult(requestCode,resultCode,data);
-//
-//    }
-
-    public String querydeviceid(String u){
-        if(PublicData.dbdevice != null){
-            cursor = PublicData.dbdevice.query("DEURL",null,null,null,null,null,null);
-            if(cursor.moveToFirst()){
-                do{
-                    itemurl = cursor.getString(cursor.getColumnIndex("url"));
-                    if(itemurl.equals(u)){
-                        itemdev = cursor.getString(cursor.getColumnIndex("dev"));
-                    }
-                }while (cursor.moveToNext());
-            }
-            cursor.close();
-        }
-        //相等则进行下一步
-        Toast.makeText(MainActivity.this,"itemdev is :"+itemdev,Toast.LENGTH_SHORT).show();
-        //Toast.makeText(MainActivity.this,"PublicData.devitemchoice is :"+PublicData.devitemchoice,Toast.LENGTH_SHORT).show();
-        if(null != itemdev){
-            if(itemdev.equals(PublicData.devitemchoice)){
-                itemurl=null;
-                content=null;
-                Intent intent_dev1 = new Intent();
-                // 封装设备名信息
-                intent_dev1.putExtra("DEVICEID",itemdev);
-                intent_dev1.setClass(MainActivity.this,MeterNum.class);// 制定传递对象
-                startActivity(intent_dev1);
-                itemdev =null;
-            }
-            content=null;
-        }
-       return itemdev;
     }
 
     private void initView() {
@@ -158,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
         // 4个Fragment资源。
         final Fragment[] fragments = new Fragment[]{
                 TaskFragment.newInstance(),
-                CountFragment.newInstance(),
+                TableFragment.newInstance(),
                 MyFragment.newInstance()
         };
         mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()){

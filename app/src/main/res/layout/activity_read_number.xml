@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/deviceread"
+                android:id="@+id/device_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -25,7 +25,7 @@
                 android:textColor="@color/black"
                 android:layout_marginTop="50dp"/>
             <TextView
-                android:id="@+id/meterread"
+                android:id="@+id/tab_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="表计ID"
