@@ -26,7 +26,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     private EquipmentAdapter adapter;
     private int count = 0;
     private String [] tabs= {
-            "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八",
+            "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八"
     };
 
     @Override
@@ -34,9 +34,6 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_equipment);
         mContext = this;
-        /******
-         * 设置状态栏透明
-         * **/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -52,6 +49,12 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         equipmentList = new ArrayList<>();
         adapter = new EquipmentAdapter(mContext,equipmentList);
+        adapter.setOnItemListener(new EquipmentAdapter.OnItemListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 

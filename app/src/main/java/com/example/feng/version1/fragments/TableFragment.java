@@ -9,6 +9,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.style.FontStyle;
@@ -24,6 +26,9 @@ public class TableFragment extends Fragment {
 
     private Context mContext;
     private SmartTable table;
+    private Spinner spinner;
+    private ArrayAdapter arr_adapter;
+    private List data_list;
 
     public static TableFragment newInstance() {
 
@@ -70,12 +75,26 @@ public class TableFragment extends Fragment {
     }
 
     public static String stampToDate(long timeMillis) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(timeMillis);
         return simpleDateFormat.format(date);
     }
 
     private void initView(View view){
         table = view.findViewById(R.id.table);
+        spinner = view.findViewById(R.id.spinner);
+        data_list = new ArrayList<String>();
+
+        data_list.add("设备一");
+        data_list.add("设备二");
+        data_list.add("设备三");
+        data_list.add("设备四");
+
+        //适配器
+        arr_adapter= new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, data_list);
+        //设置样式
+        arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //加载适配器
+        spinner.setAdapter(arr_adapter);
     }
 }

@@ -49,7 +49,7 @@ public class SelectTabActivity extends AppCompatActivity{
     }
     private void initView(){
         recyclerView = findViewById(R.id.rv_equipment);
-        deviceTv = findViewById(R.id.text_item_equipment);
+        deviceTv = findViewById(R.id.text_equipment_name);
         deviceTv.setText(device);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         equipmentList = new ArrayList<>();

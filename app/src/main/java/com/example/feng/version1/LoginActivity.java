@@ -2,6 +2,7 @@ package com.example.feng.version1;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,11 +23,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
 import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -49,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private int result = 0;
     private final static String UrlPart = "/api/global/login";
     private final static String URL = PublicData.DOMAIN+UrlPart;
+    private CookieJar cookieJar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,12 +146,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return replace2;
     }
 
+    private void saveCookie(String name, String value) {
+        SharedPreferences.Editor editor = getSharedPreferences("Cookie", MODE_PRIVATE).edit();
+        editor.putString("token",name);
+        editor.putString("token_value",value);
+        editor.apply();
+    }
     private void getData() {
         RequestBody body = new FormBody.Builder()
                 .add("userNo",user_name)
                 .add("password",pass_word)
                 .build();
-        Request request = new Request.Builder().url(LoginActivity.URL).post(body).build();
+        cookieJar = new CookieJar() {
+            private final Map<String, List<Cookie>> cookiesMap = new HashMap<>();
+
+            @Override
+            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                String host = url.host();
+                List<Cookie> cookiesList = cookiesMap.get(host);
+                if (cookiesList != null) {
+                    cookiesMap.remove(host);
+                }
+                if (cookiesList != null) {
+                    cookiesMap.put(host, cookiesList);
+                }
+            }
+
+            @Override
+            public List<Cookie> loadForRequest(HttpUrl url) {
+                List<Cookie> cookieList = cookiesMap.get(url.host());
+                return cookieList != null ? cookieList : new ArrayList<Cookie>();
+            }
+        };
+        final Request request = new Request.Builder().url(LoginActivity.URL).post(body).build();
         final OkHttpClient client = new OkHttpClient();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -159,10 +195,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
+
+
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
                         Log.d("Result: status ",""+status);
                         if (status == 1200){
+                            //存放Cookie
+                            Headers headers = response.headers();
+                            HttpUrl loginUrl = request.url();
+                            List<Cookie> cookies = Cookie.parseAll(loginUrl, headers);
+                            //防止header没有Cookie的情况
+                            //存储到Cookie管理器中
+                            client.cookieJar().saveFromResponse(loginUrl, cookies);//这样就将Cookie存储到缓存中了
+                            saveCookie(cookies.get(0).name(), cookies.get(0).value());
+
                             JSONObject data = jsonObject.getJSONObject("data");
                             int userNum = data.getInt("userNo");
                             String userName = data.getString("username");
