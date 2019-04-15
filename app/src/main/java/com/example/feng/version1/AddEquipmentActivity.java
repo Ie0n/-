@@ -3,21 +3,38 @@ package com.example.feng.version1;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.adapter.EquipmentAdapter;
+import com.example.feng.version1.bean.Device;
+import com.example.feng.version1.bean.DeviceCreateResponse;
 import com.example.feng.version1.bean.Equipment;
+import com.example.feng.version1.bean.User;
+import com.example.feng.version1.http.HttpRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddEquipmentActivity extends AppCompatActivity implements View.OnClickListener {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class AddEquipmentActivity extends AppCompatActivity implements View.OnClickListener, Callback {
 
     private RecyclerView recyclerView;
     private Context mContext;
@@ -25,6 +42,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     private List<Equipment> equipmentList;
     private EquipmentAdapter adapter;
     private int count = 0;
+    private EditText driverName;
     private String [] tabs= {
             "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八"
     };
@@ -41,6 +59,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         initView();
     }
     private void initView(){
+        driverName = findViewById(R.id.driver_name);
         recyclerView = findViewById(R.id.rv_equipment);
         add = findViewById(R.id.add);
         confirm = findViewById(R.id.confirm);
@@ -73,8 +92,52 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
 
                 break;
             case R.id.confirm:
-                Toast.makeText(mContext, "成功添加设备", Toast.LENGTH_SHORT).show();
-                AddEquipmentActivity.this.finish();
+                confirm();
         }
+    }
+
+    private void confirm(){
+        Device device = new Device();
+        device.setUserNo(User.getInstance().getuserNo());
+        String text = driverName.getText().toString();
+        if (TextUtils.isEmpty(text)){
+            Toast.makeText(mContext,"设备名不能为空",Toast.LENGTH_LONG).show();
+            return;
+        }else {
+            device.setDeviceName(text);
+            device.setDeviceNo("number1");
+        }
+        String cookies = PublicData.getCookie(mContext);
+        String url = PublicData.DOMAIN+"/api/user/addDevice";
+        RequestBody requestBody = new FormBody.Builder()
+                .add("deviceName", device.getDeviceName())
+                .add("deviceNo", device.getDeviceNo())
+                .add("userNo",String.valueOf(device.getUserNo()))
+                .build();
+        HttpRequest.getInstance().post(url,requestBody,this,cookies);
+    }
+
+    @Override
+    public void onFailure(Call call, IOException e) {
+        e.printStackTrace();
+        Toast.makeText(mContext,"添加失败"+e.getMessage(),Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onResponse(Call call, Response response) throws IOException {
+        if (response.isSuccessful()){
+            Gson gson = new GsonBuilder().create();
+            String body = PublicData.clearChar(response.body().string());
+            DeviceCreateResponse createResponse = gson.fromJson(body,DeviceCreateResponse.class);
+            if (createResponse.getStatus() == 1200){
+                Util.ToastTextThread(mContext,createResponse.getStatusInfo().getMessage());
+            }else if (createResponse.getStatus()== 1404) {
+                Util.ToastTextThread(mContext,createResponse.getStatusInfo().getMessage());
+            }
+        }
+    }
+
+    private void addMeters(){
+
     }
 }

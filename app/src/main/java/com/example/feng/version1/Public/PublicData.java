@@ -1,5 +1,11 @@
 package com.example.feng.version1.Public;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
+
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Created by feng on 2019/3/21.
  */
@@ -29,5 +35,19 @@ public class PublicData {
     public static String content = null;
 
 
+    public static String clearChar(String s) {
+        String replace = s.replace("\\", "");
+        String replace2 = replace.substring(1, replace.length() - 1);
+        return replace2;
+    }
+
+    @NonNull
+    public static String  getCookie(Context context) {
+        SharedPreferences sp = context.getSharedPreferences("Cookie", MODE_PRIVATE);
+        return sp.getString("token", "access_token")
+                .concat("=")
+                .concat(sp.getString("token_value", "null"))
+                .concat(";");
+    }
 
 }

@@ -4,27 +4,48 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
+import com.example.feng.version1.Util;
 import com.example.feng.version1.adapter.EquipmentAdapter;
+import com.example.feng.version1.adapter.MetersAdapter;
+import com.example.feng.version1.bean.DeviceMetasResponse;
 import com.example.feng.version1.bean.Equipment;
+import com.example.feng.version1.bean.User;
+import com.example.feng.version1.http.HttpRequest;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectTabActivity extends AppCompatActivity{
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+public class SelectTabActivity extends AppCompatActivity implements Callback {
 
     private RecyclerView recyclerView;
     private Context mContext;
-    private List<Equipment> equipmentList;
-    private EquipmentAdapter adapter;
+    private List<DeviceMetasResponse.DataBean.MetersBean> meters
+            ;
+    private MetersAdapter adapter;
     private String device;
     private TextView deviceTv;
     private String [] tabs= {
@@ -52,10 +73,12 @@ public class SelectTabActivity extends AppCompatActivity{
         deviceTv = findViewById(R.id.text_equipment_name);
         deviceTv.setText(device);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        equipmentList = new ArrayList<>();
+        meters
+                = new ArrayList<>();
         initData();
-        adapter = new EquipmentAdapter(mContext,equipmentList);
-        adapter.setOnItemListener(new EquipmentAdapter.OnItemListener() {
+        adapter = new MetersAdapter(mContext,meters
+        );
+        adapter.setOnItemListener(new MetersAdapter.OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(mContext, "点击了第"+position+"个仪表", Toast.LENGTH_SHORT).show();
@@ -69,9 +92,37 @@ public class SelectTabActivity extends AppCompatActivity{
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
-        for (int i = 0; i < 8; i++) {
-            equipmentList.add(new Equipment(tabs[i],11L));
-        }
+      String url = PublicData.DOMAIN+"/api/user/getAllMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+device;
+        HttpRequest.getInstance().get(url,this,PublicData.getCookie(mContext));
     }
 
+    @Override
+    public void onFailure(Call call, IOException e) {
+        Log.d("res-",e.getMessage());
+        Util.ToastTextThread(mContext,e.getMessage());
+    }
+
+    @Override
+    public void onResponse(Call call, Response response) throws IOException {
+        if (response.isSuccessful()){
+            Gson gson = new GsonBuilder().create();
+            String body =PublicData.clearChar(response.body().string());
+            Log.d("res-",body);
+            DeviceMetasResponse metasResponse = gson.fromJson(body,DeviceMetasResponse.class);
+//            try {
+//                JSONObject object = new JSONObject(body);
+//                JSONObject o= object.getJSONObject("statusinfo");
+//                String message = o.getString("message");
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+            if (metasResponse.getStatus() == 1200){
+                meters.addAll(metasResponse.getData().getMeters());
+            }else {
+                Util.ToastTextThread(mContext,metasResponse.getStatusinfo().getMessage());
+            }
+        }else {
+
+        }
+    }
 }

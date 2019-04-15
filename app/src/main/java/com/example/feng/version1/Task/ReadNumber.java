@@ -136,6 +136,7 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         }
     }
 
+
     /**
      * 语音对象封装
      */

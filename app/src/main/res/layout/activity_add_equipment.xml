@@ -20,6 +20,7 @@
             android:textSize="18sp" />
 
         <EditText
+            android:id="@+id/driver_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="请输入设备名称（如：设备1）"
