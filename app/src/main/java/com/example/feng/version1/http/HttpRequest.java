@@ -1,5 +1,6 @@
 package com.example.feng.version1.http;
 
+import java.io.IOException;
 import java.util.Map;
 
 import okhttp3.Callback;
@@ -38,6 +39,20 @@ public class HttpRequest {
                 .header("cookie",cookie)
                 .build();
          client.newCall(request).enqueue(callback);
+    }
+
+    public Response post(String url, RequestBody body, String cookie){
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .header("cookie",cookie)
+                .build();
+        try {
+            return client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
    public void get(String url,Callback callback,String cookie){

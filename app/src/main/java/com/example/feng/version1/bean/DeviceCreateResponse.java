@@ -10,7 +10,7 @@ public class DeviceCreateResponse {
 
     private DataBean data;
     private int status;
-    private StatusInfoBean statusInfo;
+    private StatusInfoBean statusinfo;
 
     public DataBean getData() {
         return data;
@@ -28,12 +28,12 @@ public class DeviceCreateResponse {
         this.status = status;
     }
 
-    public StatusInfoBean getStatusInfo() {
-        return statusInfo;
+    public StatusInfoBean getStatusinfo() {
+        return statusinfo;
     }
 
-    public void setStatusInfo(StatusInfoBean statusInfo) {
-        this.statusInfo = statusInfo;
+    public void setStatusinfo(StatusInfoBean statusinfo) {
+        this.statusinfo = statusinfo;
     }
 
     public static class DataBean {

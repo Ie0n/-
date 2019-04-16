@@ -7,21 +7,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.feng.version1.R;
-import com.example.feng.version1.bean.DeviceMetasResponse;
-import com.example.feng.version1.bean.Equipment;
+import com.example.feng.version1.bean.StatusResponse;
 
 import java.util.List;
 
 public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder> {
 
     private LayoutInflater inflater;
-    private List<DeviceMetasResponse.DataBean.MetersBean> mData;
+    private List<StatusResponse.DataBean.MetersBean> mData;
     private OnItemListener onItemListener;
     private Context mContext;
 
-    public MetersAdapter(Context context, List<DeviceMetasResponse.DataBean.MetersBean> data) {
+    public MetersAdapter(Context context, List<StatusResponse.DataBean.MetersBean> data) {
         mData = data;
         mContext = context;
         inflater = LayoutInflater.from(context);
@@ -29,7 +29,7 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private EditText txtName;
+        private TextView txtName;
 
         public ViewHolder(@NonNull View itemView,OnItemListener listener) {
             super(itemView);
@@ -55,7 +55,7 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = inflater.inflate(R.layout.item_equipment, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_select_tab, viewGroup, false);
         return new ViewHolder(view,onItemListener);
     }
 

@@ -2,7 +2,7 @@ package com.example.feng.version1.bean;
 
 import java.util.List;
 
-public class DeviceMetasResponse {
+public class StatusResponse {
 
     /**
      * data : {"meters":[{"meterId":1001,"meterName":"仪表1"},{"meterId":1002,"meterName":"仪表2"},{"meterId":1003,"meterName":"仪表3"}]}

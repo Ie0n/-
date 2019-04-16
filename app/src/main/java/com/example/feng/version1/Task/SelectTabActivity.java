@@ -4,13 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,18 +16,12 @@ import android.widget.Toast;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
 import com.example.feng.version1.Util;
-import com.example.feng.version1.adapter.EquipmentAdapter;
 import com.example.feng.version1.adapter.MetersAdapter;
-import com.example.feng.version1.bean.DeviceMetasResponse;
-import com.example.feng.version1.bean.Equipment;
+import com.example.feng.version1.bean.StatusResponse;
 import com.example.feng.version1.bean.User;
 import com.example.feng.version1.http.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +35,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
 
     private RecyclerView recyclerView;
     private Context mContext;
-    private List<DeviceMetasResponse.DataBean.MetersBean> meters
+    private List<StatusResponse.DataBean.MetersBean> meters
             ;
     private MetersAdapter adapter;
     private String device;
@@ -65,7 +57,8 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
         Intent intent_task = getIntent();
-        device = intent_task.getStringExtra("device");
+//        device = intent_task.getStringExtra("device");
+        device="yu";
         initView();
     }
     private void initView(){
@@ -84,7 +77,8 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
                 Toast.makeText(mContext, "点击了第"+position+"个仪表", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra("device",device);
-                intent.putExtra("tab",tabs[position]);
+                intent.putExtra("meterid",meters.get(position).getMeterId());
+                intent.putExtra("tab",meters.get(position).getMeterName());
                 intent.setClass(mContext,ReadNumber.class);
                 startActivity(intent);
             }
@@ -92,7 +86,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
-      String url = PublicData.DOMAIN+"/api/user/getAllMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+device;
+      String url = PublicData.DOMAIN+"/api/user/getAllMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+device.hashCode()+device;
         HttpRequest.getInstance().get(url,this,PublicData.getCookie(mContext));
     }
 
@@ -107,17 +101,15 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
         if (response.isSuccessful()){
             Gson gson = new GsonBuilder().create();
             String body =PublicData.clearChar(response.body().string());
-            Log.d("res-",body);
-            DeviceMetasResponse metasResponse = gson.fromJson(body,DeviceMetasResponse.class);
-//            try {
-//                JSONObject object = new JSONObject(body);
-//                JSONObject o= object.getJSONObject("statusinfo");
-//                String message = o.getString("message");
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
+            StatusResponse metasResponse = gson.fromJson(body,StatusResponse.class);
             if (metasResponse.getStatus() == 1200){
                 meters.addAll(metasResponse.getData().getMeters());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }else {
                 Util.ToastTextThread(mContext,metasResponse.getStatusinfo().getMessage());
             }
