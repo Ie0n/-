@@ -9,13 +9,27 @@ public class Equipment {
     private String deviceName;
     private Long id;
 
-    public Equipment(String deviceName, Long id, int tabId, String time, String userName,int tabNum) {
+    public Equipment(String deviceName, Long id, int tabId, String time, String userName,String tabNum) {
         this.deviceName = deviceName;
         this.id = id;
         this.tabId = tabId;
         this.time = time;
         this.userName = userName;
         this.tabNum = tabNum;
+    }
+
+    public Equipment(int id,String data,String time,String enterUserName){
+        this.time = time;
+        this.userName = enterUserName;
+        this.tabNum = data;
+        this.tabId = id;
+    }
+
+    public Equipment(String meterName,String data,String time,String enterUserName){
+        this.deviceName = meterName;
+        this.tabNum = data;
+        this.time = time;
+        this.userName = enterUserName;
     }
 
     public Equipment(String name, Long id){
@@ -26,7 +40,7 @@ public class Equipment {
     @SmartColumn(id = 0,name = "仪表",autoMerge = true)
     private int tabId;
     @SmartColumn(id = 1,name = "数据")
-    private int tabNum;
+    private String tabNum;
     @SmartColumn(id = 2,name = "时间")
     private String time;
     @SmartColumn(id = 3,name = "录入人")
@@ -72,11 +86,11 @@ public class Equipment {
         this.tabId = tabId;
     }
 
-    public int getTabNum() {
+    public String getTabNum() {
         return tabNum;
     }
 
-    public void setTabNum(int tabNum) {
+    public void setTabNum(String tabNum) {
         this.tabNum = tabNum;
     }
 }

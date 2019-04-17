@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
-import com.example.feng.version1.Util;
+import com.example.feng.version1.Util.Utils;
 import com.example.feng.version1.adapter.MetersAdapter;
 import com.example.feng.version1.bean.StatusResponse;
 import com.example.feng.version1.bean.User;
@@ -57,8 +57,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
         Intent intent_task = getIntent();
-//        device = intent_task.getStringExtra("device");
-        device="yu";
+        device = intent_task.getStringExtra("device");
         initView();
     }
     private void initView(){
@@ -66,19 +65,18 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
         deviceTv = findViewById(R.id.text_equipment_name);
         deviceTv.setText(device);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
-        meters
-                = new ArrayList<>();
+        meters = new ArrayList<>();
         initData();
-        adapter = new MetersAdapter(mContext,meters
-        );
+        adapter = new MetersAdapter(mContext,meters);
         adapter.setOnItemListener(new MetersAdapter.OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Toast.makeText(mContext, "点击了第"+position+"个仪表", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.putExtra("device",device);
-                intent.putExtra("meterid",meters.get(position).getMeterId());
+                intent.putExtra("meterid",String.valueOf(meters.get(position).getMeterId()));
                 intent.putExtra("tab",meters.get(position).getMeterName());
+                Log.d("meterid",String.valueOf(meters.get(position).getMeterId()));
                 intent.setClass(mContext,ReadNumber.class);
                 startActivity(intent);
             }
@@ -86,14 +84,14 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
-      String url = PublicData.DOMAIN+"/api/user/getAllMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+device.hashCode()+device;
+      String url = PublicData.DOMAIN+"/api/user/getDeviceMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+device;
         HttpRequest.getInstance().get(url,this,PublicData.getCookie(mContext));
     }
 
     @Override
     public void onFailure(Call call, IOException e) {
         Log.d("res-",e.getMessage());
-        Util.ToastTextThread(mContext,e.getMessage());
+        Utils.ToastTextThread(mContext,e.getMessage());
     }
 
     @Override
@@ -103,6 +101,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
             String body =PublicData.clearChar(response.body().string());
             StatusResponse metasResponse = gson.fromJson(body,StatusResponse.class);
             if (metasResponse.getStatus() == 1200){
+                Log.d("=====",body);
                 meters.addAll(metasResponse.getData().getMeters());
                 runOnUiThread(new Runnable() {
                     @Override
@@ -111,7 +110,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
                     }
                 });
             }else {
-                Util.ToastTextThread(mContext,metasResponse.getStatusinfo().getMessage());
+                Utils.ToastTextThread(mContext,metasResponse.getStatusinfo().getMessage());
             }
         }else {
 

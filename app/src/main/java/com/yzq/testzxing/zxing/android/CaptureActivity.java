@@ -185,8 +185,6 @@ public final class CaptureActivity extends Activity implements
         if (fromLiveScan) {
             beepManager.playBeepSoundAndVibrate();
 
-            Toast.makeText(this, "扫描成功", Toast.LENGTH_SHORT).show();
-
             Intent intent = getIntent();
             intent.putExtra("codedContent", rawResult.getText());
             intent.putExtra("codedBitmap", barcode);

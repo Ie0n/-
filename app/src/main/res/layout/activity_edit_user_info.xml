@@ -1,30 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+<android.support.v7.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:translationZ="5dp">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_margin="8dp"
-            android:id="@+id/line1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text="用户名："
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="17sp"/>
-            <EditText
-                android:id="@+id/edit_item_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:background="@null"
-                android:text="张三"/>
-        </LinearLayout>
         <LinearLayout
             android:layout_margin="8dp"
             android:layout_below="@id/line1"
@@ -42,8 +28,27 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:background="@null"
-                android:text="张三"/>
+                android:hint="请输入账号"/>
         </LinearLayout>
+        <LinearLayout
+            android:layout_margin="8dp"
+            android:id="@+id/line1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:text="用户名："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"/>
+            <EditText
+                android:id="@+id/edit_item_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:background="@null"
+                android:hint="请输入用户名"/>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_margin="8dp"
 
@@ -60,9 +65,11 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:background="@null"
-                android:text="******"/>
+                android:hint="请输入密码"/>
         </LinearLayout>
 
     </LinearLayout>
+</android.support.v7.widget.CardView>
 
-</android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

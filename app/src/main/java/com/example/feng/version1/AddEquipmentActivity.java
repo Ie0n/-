@@ -1,9 +1,9 @@
 package com.example.feng.version1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
+import com.example.feng.version1.Util.Utils;
 import com.example.feng.version1.adapter.EquipmentAdapter;
 import com.example.feng.version1.bean.Device;
 import com.example.feng.version1.bean.DeviceCreateResponse;
@@ -26,7 +27,7 @@ import com.example.feng.version1.http.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONObject;
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     private LinearLayoutManager layoutManager;
     private int count = 0;
     private EditText driverName;
+    private String deviceNo;
     private Device device = new Device();
     private String [] tabs= {
             "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八"
@@ -58,6 +60,9 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_equipment);
         mContext = this;
+        Intent intent = getIntent();
+        deviceNo = intent.getStringExtra("deviceNo");
+        Log.d("-aaaa","onCreate"+deviceNo);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -111,16 +116,17 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             return;
         }else {
             device.setDeviceName(text);
-            device.setDeviceNo(text.hashCode()+text);
         }
         String cookies = PublicData.getCookie(mContext);
         String url = PublicData.DOMAIN+"/api/user/addDevice";
+        Log.d("-aaaa","confirm"+deviceNo);
         RequestBody requestBody = new FormBody.Builder()
+                .add("userNo",String.valueOf(User.getInstance().getuserNo()))
                 .add("deviceName", device.getDeviceName())
-                .add("deviceNo", device.getDeviceNo())
-                .add("userNo",String.valueOf(device.getUserNo()))
+                .add("deviceNo", deviceNo)
                 .build();
         HttpRequest.getInstance().post(url,requestBody,this,cookies);
+
     }
 
     @Override
@@ -138,7 +144,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             if (createResponse.getStatus() == 1200){
                 addMeters();
             }else if (createResponse.getStatus()== 1404) {
-                Util.ToastTextThread(mContext,createResponse.getStatusinfo().getMessage());
+                Utils.ToastTextThread(mContext,createResponse.getStatusinfo().getMessage());
             }
         }
     }
@@ -152,12 +158,12 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                 try {
                     for (int i = 0; i < count; i++) {
                         View view = layoutManager.findViewByPosition(i);
-                        EditText editText = (EditText) view.findViewById(R.id.text_item_equipment);
+                        EditText editText = view.findViewById(R.id.text_item_equipment);
                         String name = editText.getText().toString();
                         RequestBody requestBody = new FormBody.Builder()
                                 .add("userNo", String.valueOf(User.getInstance().getuserNo()))
+                                .add("deviceNo", deviceNo)
                                 .add("meterName", name)
-                                .add("deviceNo", device.getDeviceNo())
                                 .build();
                         Response response = HttpRequest.getInstance().post(url, requestBody, cookie);
                         if (response.isSuccessful()) {
@@ -165,16 +171,19 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                             Gson gson = new GsonBuilder().create();
                             StatusResponse r = gson.fromJson(body,StatusResponse.class);
                             if (r.getStatus() != 1200){
-                                Util.ToastTextThread(mContext,r.getStatusinfo().getMessage());
+                                Utils.ToastTextThread(mContext,r.getStatusinfo().getMessage());
                             }else {
-                                Util.ToastTextThread(mContext,"添加仪表:"+name+"成功");
+                                Utils.ToastTextThread(mContext,"添加仪表:"+name+"成功");
+
                             }
                         }
                     }
                 }catch (Exception e){
                     e.printStackTrace();
                 }finally {
-                    Util.ToastTextThread(AddEquipmentActivity.this,"上传结束");
+                    AddEquipmentActivity.this.finish();
+                    Utils.ToastTextThread(AddEquipmentActivity.this,"上传结束");
+                    EventBus.getDefault().post(new MessageEvent());
                 }
             }
         };
@@ -186,4 +195,5 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             e.printStackTrace();
         }
     }
+
 }

@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.Task.MainActivity;
+import com.example.feng.version1.Util.Utils;
 import com.example.feng.version1.bean.User;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,7 +49,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Button login_btn;
     private User user;
     private int userID;
-    private String[] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private String[] permissions = {    Manifest.permission.READ_EXTERNAL_STORAGE
+            ,Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private String user_name;
     private String pass_word;
@@ -219,11 +220,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             user.setAdmin(admin);
                             user.setUserName(userName);
                             intent_a.setClass(LoginActivity.this, MainActivity.class);
-                            Util.ToastTextThread(LoginActivity.this,"登录成功");
+                            Utils.ToastTextThread(LoginActivity.this,"登录成功");
                             LoginActivity.this.finish();
                             startActivity(intent_a);
                         }else if (status == 1404){
-                            Util.ToastTextThread(LoginActivity.this,"帐号不存在或密码错误");
+                            Utils.ToastTextThread(LoginActivity.this,"帐号不存在或密码错误");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
