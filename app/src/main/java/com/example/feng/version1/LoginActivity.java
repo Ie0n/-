@@ -186,6 +186,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("fail","获取数据失败");
+                e.printStackTrace();
+                Utils.ToastTextThread(LoginActivity.this,"登录失败");
             }
 
             @Override

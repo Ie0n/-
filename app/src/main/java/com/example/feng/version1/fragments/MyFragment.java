@@ -36,7 +36,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.Call;
@@ -55,8 +57,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
     private Context mContext;
     private User user;
     private TextView user_name_text,user_id_text;
-    private int count = 1;
-    private int[] ints;
     private List<Equipment> demoBeanList;
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllData";
 
@@ -74,10 +74,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my, container, false);
         user = User.getInstance();
-        ints = new int[400];
-        for (int i = 0; i < 300; i++) {
-            ints[i+1] = i;
-        }
         initView(view);
         //拿到user
         return view;
@@ -191,15 +187,17 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
     private void printOutExcel(){
 
 
 
-        String name = "/excel";
-        String num = String.valueOf(ints[count]);
+
         String hh = ".xls";
-        String result = name.concat(num).concat(hh);
-        Log.d("dddd",result);
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        String entry = simpleDateFormat.format(new Date(System.currentTimeMillis()));
+        String result = entry.concat(hh);
 
         File file = new File(Environment.getExternalStorageDirectory().toString()+
 
@@ -209,15 +207,8 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         }
 
 
-
-
         String[] title = {"设备名","仪表名", "数据", "录入时间","录入人"};
 
-//        filePath = filePath + excelFileName;
-
-        String excelFileName = "/demo.xls";
-
-//        filePath =  filePath+ excelFileName;
 
         ExcelUtil.initExcel(Environment.getExternalStorageDirectory().toString()+
 
@@ -232,7 +223,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
 
                 File.separator +"DataExcel", result,mContext);
 
-        count++;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
