@@ -195,7 +195,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
 
         String hh = ".xls";
 
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         String entry = simpleDateFormat.format(new Date(System.currentTimeMillis()));
         String result = entry.concat(hh);
 
