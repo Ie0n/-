@@ -70,7 +70,7 @@
         android:background="@drawable/shape_btn"
         android:visibility="gone"
 
-        android:textSize="20sp"/>
+        android:textSize="18sp"/>
     <Button
         android:id="@+id/btn_excel_out"
         android:layout_margin="50dp"
@@ -79,17 +79,17 @@
         android:text="导出所有数据"
         android:textColor="@color/white"
 
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:layout_margin="50dp"
+        android:layout_margin="66dp"
         android:layout_alignParentBottom="true"
         android:textColor="@color/white"
 
         android:text="退出"
         android:background="@drawable/shape_btn"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

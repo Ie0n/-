@@ -38,7 +38,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
     private List<StatusResponse.DataBean.MetersBean> meters
             ;
     private MetersAdapter adapter;
-    private String device;
+    private String deviceName,deviceNo;
     private TextView deviceTv;
     private String [] tabs= {
             "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八",
@@ -57,13 +57,14 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
         Intent intent_task = getIntent();
-        device = intent_task.getStringExtra("device");
+        deviceName = intent_task.getStringExtra("deviceName");
+        deviceNo = intent_task.getStringExtra("deviceNo");
         initView();
     }
     private void initView(){
         recyclerView = findViewById(R.id.rv_equipment);
         deviceTv = findViewById(R.id.text_equipment_name);
-        deviceTv.setText(device);
+        deviceTv.setText(deviceName);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         meters = new ArrayList<>();
         initData();
@@ -71,9 +72,8 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
         adapter.setOnItemListener(new MetersAdapter.OnItemListener() {
             @Override
             public void onItemClick(View view, int position) {
-                Toast.makeText(mContext, "点击了第"+position+"个仪表", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
-                intent.putExtra("device",device);
+                intent.putExtra("device",deviceName);
                 intent.putExtra("meterid",String.valueOf(meters.get(position).getMeterId()));
                 intent.putExtra("tab",meters.get(position).getMeterName());
                 Log.d("meterid",String.valueOf(meters.get(position).getMeterId()));
@@ -84,7 +84,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
-      String url = PublicData.DOMAIN+"/api/user/getDeviceMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+device;
+      String url = PublicData.DOMAIN+"/api/user/getDeviceMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+deviceNo;
         HttpRequest.getInstance().get(url,this,PublicData.getCookie(mContext));
     }
 
@@ -101,7 +101,6 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
             String body =PublicData.clearChar(response.body().string());
             StatusResponse metasResponse = gson.fromJson(body,StatusResponse.class);
             if (metasResponse.getStatus() == 1200){
-                Log.d("=====",body);
                 meters.addAll(metasResponse.getData().getMeters());
                 runOnUiThread(new Runnable() {
                     @Override

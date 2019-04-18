@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,12 +18,17 @@ import android.widget.Spinner;
 
 import com.bin.david.form.core.SmartTable;
 import com.bin.david.form.data.style.FontStyle;
+import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
 import com.example.feng.version1.Util.Utils;
 import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.User;
+import com.google.gson.JsonObject;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +36,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import okhttp3.Call;
@@ -220,15 +227,23 @@ public class TableFragment extends Fragment {
                             //把数据加入设备数据表
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("meters");
+
+                            ArrayList<String> list= new ArrayList();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
-                                ArrayList<String> list = new ArrayList();
                                 list.add(jsonObject2.getString("meterId"));
-//                                list.sort();
-                                MeterList.add(new Equipment(jsonObject2.getString("meterId"),
+                            }
+
+                            Collections.sort(list);
+                            Log.d("dddddddddddd",Arrays.toString(list.toArray()));
+                            Log.d("dddddddddddd",list.get(0));
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject jsonObject2 = (JSONObject)array.get(i);
+                                MeterList.add(new Equipment(String.valueOf(list.indexOf(jsonObject2.getString("meterId"))+1),
                                         jsonObject2.optString("data"),
                                         jsonObject2.optString("entryTime"),
                                         jsonObject2.optString("entryUsername")));
+                                Log.d("dddddddddddd",String.valueOf(list.indexOf(jsonObject2.getString("meterId"))+1));
 
                             }
 
@@ -250,4 +265,5 @@ public class TableFragment extends Fragment {
             }
         });
     }
+
 }

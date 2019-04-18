@@ -70,11 +70,11 @@ public class ExcelUtil {
      * @param fileName 导出excel存放的地址（目录）
      * @param colName excel中包含的列名（可以有多个）
      */
-    public static void initExcel(String fileName, String[] colName) {
+    public static void initExcel(String fileName,String name, String[] colName) {
         format();
         WritableWorkbook workbook = null;
         try {
-            File file = new File(fileName);
+            File file = new File(fileName,name);
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -103,22 +103,24 @@ public class ExcelUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> void writeObjListToExcel(List<T> objList, String fileName, Context c) {
+    public static <T> void writeObjListToExcel(List<T> objList, String fileName,String name, Context c) {
         if (objList != null && objList.size() > 0) {
             WritableWorkbook writebook = null;
             InputStream in = null;
             try {
                 WorkbookSettings setEncode = new WorkbookSettings();
                 setEncode.setEncoding(UTF8_ENCODING);
-                in = new FileInputStream(new File(fileName));
+                in = new FileInputStream(new File(fileName,name));
                 Workbook workbook = Workbook.getWorkbook(in);
-                writebook = Workbook.createWorkbook(new File(fileName), workbook);
+                writebook = Workbook.createWorkbook(new File(fileName,name), workbook);
                 WritableSheet sheet = writebook.getSheet(0);
 
                 for (int j = 0; j < objList.size(); j++) {
                     Equipment meter = (Equipment) objList.get(j);
                     List<String> list = new ArrayList<>();
+
                     list.add(meter.getName());
+                    list.add(meter.getMeterName());
                     list.add(meter.getTabNum());
                     list.add(meter.getTime());
                     list.add(meter.getUserName());

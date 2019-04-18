@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
 import com.example.feng.version1.Util.Utils;
@@ -27,6 +28,8 @@ import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -140,19 +143,23 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
                /**在这里写上传数据逻辑**/
                 result_edit = editxt.getText().toString();
                 String result = result_edit;
+                if (result_speech == null && result_edit.equals("")){
+                    Toast.makeText(this, "请语音或手动录入参数", Toast.LENGTH_SHORT).show();
+                    break;
+                }
                 if(TextUtils.isEmpty(result)){
                     result = result_speech;
                 }
                 if (TextUtils.isEmpty(result)){
-                    Toast.makeText(this,"请输入值",Toast.LENGTH_LONG);
+                    Toast.makeText(this,"请输入值",Toast.LENGTH_LONG).show();
                 }
                 try {
                     float r =  Float.parseFloat(result);
-                    if (r>=7.5&&r<10.5) {
+//                    if (r>=7.5&&r<10.5) {
                         updateResult(result);
-                    }else {
-                        Toast.makeText(this,"请输入合适的值",Toast.LENGTH_LONG).show();
-                    }
+//                    }else {
+//                        Toast.makeText(this,"请输入合适的值",Toast.LENGTH_LONG).show();
+//                    }
                 }catch (NumberFormatException e){
                     Toast.makeText(this,"请输入数字",Toast.LENGTH_LONG).show();
                 }
@@ -190,6 +197,8 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
             StatusResponse r = gson.fromJson(body,StatusResponse.class);
             if (r.getStatus() == 1200){
                 Utils.ToastTextThread(this,r.getStatusinfo().getMessage());
+                EventBus.getDefault().post(new MessageEvent());
+                ReadNumber.this.finish();
             }else{
                 Utils.ToastTextThread(this,r.getStatusinfo().getMessage());
             }

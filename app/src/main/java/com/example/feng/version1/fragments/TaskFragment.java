@@ -62,7 +62,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     private static final int REQUEST_CODE_INPUT = 0x0001;
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
 
-    private List<String> deviceList;
+    private List<String> deviceList,deviceNameList;
 
     private User user;
 
@@ -120,6 +120,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
 
     private void initData(){
         deviceList = new ArrayList<>();
+        deviceNameList = new ArrayList<>();
         user = User.getInstance();
         HttpUrl.Builder builder = HttpUrl.parse(URL).newBuilder();
         builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()));
@@ -155,6 +156,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 deviceList.add(jsonObject2.optString("deviceNo"));
+                                deviceNameList.add(jsonObject2.optString("deviceName"));
                             }
 
                         }else if (status == 1404){
@@ -180,14 +182,14 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             if (data != null){
                 content = data.getStringExtra(DECODED_CONTENT_KEY);
 
-                Log.d(TAG,content);
                 if (deviceList.contains(content)){
+                    int i = deviceList.indexOf(content);
                     Intent intent = new Intent();
-                    intent.putExtra("device",content);
+                    intent.putExtra("deviceNo",content);
+                    intent.putExtra("deviceName",deviceNameList.get(i));
                     intent.setClass(mContext,SelectTabActivity.class);// 制定传递对象
                     startActivity(intent);
                 }else {
-                    Log.d(TAG,"未录入");
                     Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
                 }
 
@@ -199,9 +201,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK){
             if (data != null){
                 content = data.getStringExtra(DECODED_CONTENT_KEY);
-                Log.d("TAG--",Arrays.toString(deviceList.toArray()));
-                Log.d("TAG--",content);
-                Log.d("TAG--",""+deviceList.contains(content));
                 if (deviceList.contains(content)){
                     Utils.ToastTextThread(mContext,"该设备已录入");
                 }else {

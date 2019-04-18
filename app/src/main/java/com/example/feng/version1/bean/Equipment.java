@@ -7,29 +7,22 @@ import com.bin.david.form.annotation.SmartTable;
 public class Equipment {
 
     private String deviceName;
+    private String meterName;
     private Long id;
 
-    public Equipment(String deviceName, Long id, int tabId, String time, String userName,String tabNum) {
+    public Equipment(String deviceName, String meterName, String data, String time, String userName) {
         this.deviceName = deviceName;
-        this.id = id;
-        this.tabId = tabId;
+        this.meterName = meterName;
+        this.tabNum = data;
         this.time = time;
         this.userName = userName;
-        this.tabNum = tabNum;
     }
 
-    public Equipment(int id,String data,String time,String enterUserName){
+    public Equipment(String id,String data,String time,String enterUserName){
         this.time = time;
         this.userName = enterUserName;
         this.tabNum = data;
         this.tabId = id;
-    }
-
-    public Equipment(String meterName,String data,String time,String enterUserName){
-        this.deviceName = meterName;
-        this.tabNum = data;
-        this.time = time;
-        this.userName = enterUserName;
     }
 
     public Equipment(String name, Long id){
@@ -38,7 +31,7 @@ public class Equipment {
     }
 
     @SmartColumn(id = 0,name = "仪表",autoMerge = true)
-    private int tabId;
+    private String tabId;
     @SmartColumn(id = 1,name = "数据")
     private String tabNum;
     @SmartColumn(id = 2,name = "时间")
@@ -78,11 +71,11 @@ public class Equipment {
         this.time = time;
     }
 
-    public int gettabId() {
+    public String gettabId() {
         return tabId;
     }
 
-    public void settabId(int tabId) {
+    public void settabId(String tabId) {
         this.tabId = tabId;
     }
 
@@ -92,5 +85,13 @@ public class Equipment {
 
     public void setTabNum(String tabNum) {
         this.tabNum = tabNum;
+    }
+
+    public String getMeterName() {
+        return meterName;
+    }
+
+    public void setMeterName(String meterName) {
+        this.meterName = meterName;
     }
 }
