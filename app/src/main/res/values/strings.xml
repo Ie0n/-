@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">first</string>
+    <string name="app_name">MachineRec</string>
     <string name="login_label_signin">登录</string>
     <string name="login_register_link">注册</string>
     <string name="task_xml_margin">10dp</string>
