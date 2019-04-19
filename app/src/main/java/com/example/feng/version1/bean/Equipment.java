@@ -8,6 +8,7 @@ public class Equipment {
 
     private String deviceName;
     private String meterName;
+    private String deviceId;
     private Long id;
 
     public Equipment(String deviceName, String meterName, String data, String time, String userName) {
@@ -28,6 +29,11 @@ public class Equipment {
     public Equipment(String name, Long id){
         this.deviceName = name;
         this.id = id;
+    }
+
+    public Equipment(String name,String id){
+        this.deviceName = name;
+        this.deviceId = id;
     }
 
     @SmartColumn(id = 0,name = "仪表",autoMerge = true)
@@ -93,5 +99,13 @@ public class Equipment {
 
     public void setMeterName(String meterName) {
         this.meterName = meterName;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
     }
 }

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
 
         mTabHost.setup();
         String titles[] = {
-                "任务","数据统计","我的"
+                "执行操作","查看设备数据","我的"
         };
         int iconID[] = {
             R.drawable.ic_main_tab_selector_task,R.drawable.ic_main_tab_selector_data

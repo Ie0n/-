@@ -33,4 +33,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/line_equipment"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="30dp"
+        android:src="@mipmap/confirm"
+        android:translationZ="3dp"
+        android:visibility="visible" />
+
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.Util.Utils;
@@ -58,6 +61,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
         mContext = this;
+        setEditCustomActionBar();
         user = User.getInstance();
         initView();
     }
@@ -182,7 +186,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         mPopWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 2, location[1]
                 - popupHeight/3);
         mPopWindow.update();
-        mPopView.findViewById(R.id.tv_copy_txt).setOnClickListener(new View.OnClickListener() {
+        mPopView.findViewById(R.id.tv_delete_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteUser(id);
@@ -276,5 +280,21 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         if (EventBus.getDefault().isRegistered(this))//加上判断
             EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+    private void setEditCustomActionBar() {
+        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
+        View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_user_activity, null);
+        getSupportActionBar().setCustomView(mActionBarView, lp);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ImageView back = mActionBarView.findViewById(R.id.pic);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserActivity.this.finish();
+            }
+        });
     }
 }

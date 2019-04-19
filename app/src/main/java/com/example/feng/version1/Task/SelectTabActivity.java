@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,13 +33,13 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class SelectTabActivity extends AppCompatActivity implements Callback {
+public class SelectTabActivity extends AppCompatActivity implements Callback,View.OnClickListener {
 
     private RecyclerView recyclerView;
     private Context mContext;
-    private List<StatusResponse.DataBean.MetersBean> meters
-            ;
+    private List<StatusResponse.DataBean.MetersBean> meters;
     private MetersAdapter adapter;
+    private FloatingActionButton confirm;
     private String deviceName,deviceNo;
     private TextView deviceTv;
     private String [] tabs= {
@@ -64,6 +66,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
     private void initView(){
         recyclerView = findViewById(R.id.rv_equipment);
         deviceTv = findViewById(R.id.text_equipment_name);
+        confirm = findViewById(R.id.confirm);
         deviceTv.setText(deviceName);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         meters = new ArrayList<>();
@@ -113,6 +116,18 @@ public class SelectTabActivity extends AppCompatActivity implements Callback {
             }
         }else {
 
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.confirm:
+                //点击确认按钮执行的操作
+                Toast.makeText(mContext, "是否确认上传", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
         }
     }
 }

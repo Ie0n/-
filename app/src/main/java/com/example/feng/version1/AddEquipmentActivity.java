@@ -73,11 +73,11 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         driverName = findViewById(R.id.driver_name);
         recyclerView = findViewById(R.id.rv_equipment);
         layoutManager = new LinearLayoutManager(mContext);
+        recyclerView.setLayoutManager(layoutManager);
         add = findViewById(R.id.add);
         confirm = findViewById(R.id.confirm);
         add.setOnClickListener(this);
         confirm.setOnClickListener(this);
-        recyclerView.setLayoutManager(layoutManager);
         equipmentList = new ArrayList<>();
         adapter = new EquipmentAdapter(mContext,equipmentList);
         adapter.setOnItemListener(new EquipmentAdapter.OnItemListener() {

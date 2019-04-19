@@ -21,6 +21,20 @@
             android:textSize="18sp"
             android:text="仪表1"/>
 
+        <ImageView
+            android:id="@+id/img_confirm_in"
+            android:layout_margin="20dp"
+            android:layout_gravity="right"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/confirm"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/text_device_id"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
 
     </android.support.v7.widget.CardView>
 

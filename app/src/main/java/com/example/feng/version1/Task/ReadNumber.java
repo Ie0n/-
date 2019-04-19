@@ -171,7 +171,7 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
     }
 
     private void updateResult(String result){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
         String entry = simpleDateFormat.format(new Date(System.currentTimeMillis()));
         RequestBody body = new FormBody.Builder()
                 .add("userNo",String.valueOf(User.getInstance().getuserNo()))

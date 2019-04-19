@@ -97,6 +97,7 @@ public class TableFragment extends Fragment {
                 MeterList.clear();
                 getMeterData(deviceIdList.get(position));
 
+
             }
 
             @Override
@@ -151,6 +152,7 @@ public class TableFragment extends Fragment {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
+                        deviceNameList.add("请选择设备");
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("devices");
@@ -158,7 +160,6 @@ public class TableFragment extends Fragment {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 deviceNameList.add(jsonObject2.optString("deviceName"));
                                 deviceIdList.add(jsonObject2.optString("deviceNo"));
-                                Log.d("设备数据",deviceNameList.get(i));
                             }
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
@@ -190,7 +191,7 @@ public class TableFragment extends Fragment {
     private void initView(View view){
         table = view.findViewById(R.id.table);
         spinner = view.findViewById(R.id.spinner);
-
+        spinner.setSelection(0,true);
     }
 
     private void getMeterData(String id){
@@ -250,9 +251,11 @@ public class TableFragment extends Fragment {
                             table.setData(MeterList);
                             table.getConfig().setColumnTitleStyle(new FontStyle(54,Color.BLUE));
                             table.getConfig().setTableTitleStyle(new FontStyle(80,Color.BLACK));
-                            table.getConfig().setContentStyle(new FontStyle(60,Color.BLACK));
+                            table.getConfig().setContentStyle(new FontStyle(50,Color.BLACK));
                             table.getConfig().setShowXSequence(false);
                             table.getConfig().setShowYSequence(false);
+                            table.notifyDataChanged();
+
                         }else if (status == 1404){
                             Utils.ToastTextThread(mContext,"设备id错误或当前设备没有仪表信息");
                         }

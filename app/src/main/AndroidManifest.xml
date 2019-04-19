@@ -66,9 +66,10 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Task.SelectTabActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".UserActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".UserActivity" />
         <activity android:name=".EditUserInfoActivity" />
+        <activity android:name=".AllDeviceActivity" />
+        <activity android:name=".AllMeterActivity" />
 
     </application>
 

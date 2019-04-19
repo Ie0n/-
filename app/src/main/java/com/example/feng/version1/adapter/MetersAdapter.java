@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.feng.version1.R;
@@ -30,6 +31,7 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView txtName;
+        private ImageView confirm;
 
         public ViewHolder(@NonNull View itemView,OnItemListener listener) {
             super(itemView);
@@ -37,6 +39,7 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
             itemView.setOnClickListener(this);
             txtName = itemView.findViewById(R.id.text_item_equipment);
             txtName.setOnClickListener(this);
+            confirm = itemView.findViewById(R.id.img_confirm_in);
         }
 
         @Override
@@ -76,5 +79,9 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
 
     public interface OnItemListener{
         void onItemClick(View view, int position);
+    }
+
+    public void setConfirmVisible(int position){
+
     }
 }
