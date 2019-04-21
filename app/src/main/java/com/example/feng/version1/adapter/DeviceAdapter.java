@@ -58,7 +58,7 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
 
         @Override
         public boolean onLongClick(View v) {
-            onItemLongClickListener.onItemLongClick(v,getPosition(),textID.getText().toString());
+            onItemLongClickListener.onItemLongClick(v,getPosition(),textID.getText().toString(),txtName.getText().toString());
             return true;
         }
     }
@@ -88,7 +88,7 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
         void onItemClick(View view, int position);
     }
     public interface onItemLongClickListener{
-        void onItemLongClick(View view,int position,String id);
+        void onItemLongClick(View view,int position,String id,String name);
     }
     public void setOnItemLongClickListener(DeviceAdapter.onItemLongClickListener onItemLongClickListener) {
         this.onItemLongClickListener = onItemLongClickListener;

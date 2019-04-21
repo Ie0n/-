@@ -152,7 +152,7 @@ public class TableFragment extends Fragment {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        deviceNameList.add("请选择设备");
+
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("devices");
@@ -191,7 +191,6 @@ public class TableFragment extends Fragment {
     private void initView(View view){
         table = view.findViewById(R.id.table);
         spinner = view.findViewById(R.id.spinner);
-        spinner.setSelection(0,true);
     }
 
     private void getMeterData(String id){
@@ -244,7 +243,6 @@ public class TableFragment extends Fragment {
                                         jsonObject2.optString("data"),
                                         jsonObject2.optString("entryTime"),
                                         jsonObject2.optString("entryUsername")));
-                                Log.d("dddddddddddd",String.valueOf(list.indexOf(jsonObject2.getString("meterId"))+1));
 
                             }
 
@@ -254,7 +252,6 @@ public class TableFragment extends Fragment {
                             table.getConfig().setContentStyle(new FontStyle(50,Color.BLACK));
                             table.getConfig().setShowXSequence(false);
                             table.getConfig().setShowYSequence(false);
-                            table.notifyDataChanged();
 
                         }else if (status == 1404){
                             Utils.ToastTextThread(mContext,"设备id错误或当前设备没有仪表信息");
@@ -267,6 +264,27 @@ public class TableFragment extends Fragment {
                 }
             }
         });
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        deviceNameList.clear();
+        deviceIdList.clear();
+        getData();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)){//加上判断
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        if (EventBus.getDefault().isRegistered(this))//加上判断
+            EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
 }

@@ -30,6 +30,7 @@ import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.Meter;
 import com.example.feng.version1.bean.User;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +56,7 @@ public class AllMeterActivity extends AppCompatActivity {
     private String deviceNo;
     private MeterAdapter adapter;
     private static final String URL = PublicData.DOMAIN+"/api/user/getDeviceMeters";
+    private static final String DELETE_URL = PublicData.DOMAIN+"/api/user/deleteMeter";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,7 +152,7 @@ public class AllMeterActivity extends AppCompatActivity {
                                 }
                             });
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"账号不合法或该账户不存在");
+                            Utils.ToastTextThread(mContext,"设备id错误或当前设备没有仪表信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -199,10 +201,56 @@ public class AllMeterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //发起网络请求删除当前id的item
-//                deleteUser(id);
-                Toast.makeText(AllMeterActivity.this, "id为"+id+"的设备已删除", Toast.LENGTH_SHORT).show();
+                deleteMeter(id);
                 if (mPopWindow != null) {
                     mPopWindow.dismiss();
+                }
+            }
+        });
+    }
+    private void deleteMeter(String id){
+        HttpUrl.Builder builder = HttpUrl.parse(DELETE_URL).newBuilder();
+        builder
+                .addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("meterId",id);
+        Log.d("!!!!!",id+"-----"+String.valueOf(user.getuserNo()));
+        Request request = new Request
+                .Builder()
+                .url(builder.build())
+                .delete()
+                .header("Cookie", getCookie())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+
+                    String result = response.body().string();
+                    Log.d("Result: ",result);
+                    try {
+                        String result1 = clearChar(result);
+                        JSONObject jsonObject = new JSONObject(result1);
+                        int status = jsonObject.getInt("status");
+                        Log.d("Result: status ",""+status);
+                        if (status == 1200){
+                            Utils.ToastTextThread(AllMeterActivity.this,"设备删除成功");
+                            meterList.clear();
+                            getData();
+                            EventBus.getDefault().post(new MessageEvent());
+                        }else if (status == 1404){
+                            Utils.ToastTextThread(AllMeterActivity.this,"账号不合法或该账户不存在");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

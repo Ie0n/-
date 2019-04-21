@@ -1,10 +1,12 @@
 package com.example.feng.version1.Task;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -66,7 +68,8 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     private void initView(){
         recyclerView = findViewById(R.id.rv_equipment);
         deviceTv = findViewById(R.id.text_equipment_name);
-        confirm = findViewById(R.id.confirm);
+        confirm = findViewById(R.id.confirm_btn);
+        confirm.setOnClickListener(this);
         deviceTv.setText(deviceName);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         meters = new ArrayList<>();
@@ -122,12 +125,40 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.confirm:
+            case R.id.confirm_btn:
                 //点击确认按钮执行的操作
-                Toast.makeText(mContext, "是否确认上传", Toast.LENGTH_SHORT).show();
+                showDialog();
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        showDialog();
+    }
+    private void showDialog(){
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setIcon(R.mipmap.icon)//设置标题的图片
+                .setTitle("提示")//设置对话框的标题
+                .setMessage("请先确认仪表数据是否录入完整")//设置对话框的内容
+                //设置对话框的按钮
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(mContext, "已上传所有已录入数据", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        SelectTabActivity.this.finish();
+                    }
+                }).create();
+        dialog.show();
     }
 }

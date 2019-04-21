@@ -154,12 +154,15 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
                     Toast.makeText(this,"请输入值",Toast.LENGTH_LONG).show();
                 }
                 try {
-                    float r =  Float.parseFloat(result);
+                    if (result_speech != null && !result_edit.equals("")){
+                        result = result_edit;
 //                    if (r>=7.5&&r<10.5) {
                         updateResult(result);
 //                    }else {
 //                        Toast.makeText(this,"请输入合适的值",Toast.LENGTH_LONG).show();
 //                    }
+                    }
+
                 }catch (NumberFormatException e){
                     Toast.makeText(this,"请输入数字",Toast.LENGTH_LONG).show();
                 }
@@ -171,7 +174,7 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
     }
 
     private void updateResult(String result){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String entry = simpleDateFormat.format(new Date(System.currentTimeMillis()));
         RequestBody body = new FormBody.Builder()
                 .add("userNo",String.valueOf(User.getInstance().getuserNo()))

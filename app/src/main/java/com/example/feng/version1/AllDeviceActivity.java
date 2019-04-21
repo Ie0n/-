@@ -29,6 +29,7 @@ import com.example.feng.version1.adapter.MetersAdapter;
 import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.User;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +54,7 @@ public class AllDeviceActivity extends AppCompatActivity {
     private List<Equipment> deviceList;
     private User user;
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
+    private static final String DELETE_URL = PublicData.DOMAIN+"/api/user/deleteDevice";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -136,9 +138,9 @@ public class AllDeviceActivity extends AppCompatActivity {
                                     adapter = new DeviceAdapter(mContext,deviceList);
                                     adapter.setOnItemLongClickListener(new DeviceAdapter.onItemLongClickListener() {
                                         @Override
-                                        public void onItemLongClick(View view, int position, String id) {
+                                        public void onItemLongClick(View view, int position, String id,String name) {
                                             //做删除操作
-                                            showPopWindows(view,id);
+                                            showPopWindows(view,id,name);
                                         }
                                     });
                                     adapter.setOnItemListener(new DeviceAdapter.OnItemListener() {
@@ -182,7 +184,7 @@ public class AllDeviceActivity extends AppCompatActivity {
             }
         });
     }
-    private void showPopWindows(View v, final String id) {
+    private void showPopWindows(View v, final String id,final String name) {
         View mPopView = LayoutInflater.from(this).inflate(R.layout.popup, null);
         TextView textView = mPopView.findViewById(R.id.tv_delete_txt);
         textView.setText("删除该设备");
@@ -204,10 +206,59 @@ public class AllDeviceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //发起网络请求删除当前id的item
-//                deleteUser(id);
-                Toast.makeText(AllDeviceActivity.this, "id为"+id+"的设备已删除", Toast.LENGTH_SHORT).show();
+                deleteDevice(name,id);
                 if (mPopWindow != null) {
                     mPopWindow.dismiss();
+                }
+            }
+        });
+    }
+
+    private void deleteDevice(String deviceName,String id){
+        HttpUrl.Builder builder = HttpUrl.parse(DELETE_URL).newBuilder();
+        builder
+                .addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("deviceName",deviceName)
+                .addQueryParameter("deviceNo",id);
+        Request request = new Request
+                .Builder()
+                .url(builder.build())
+                .delete()
+                .header("Cookie", getCookie())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+
+                    String result = response.body().string();
+                    Log.d("Result: ",result);
+                    try {
+                        String result1 = clearChar(result);
+                        JSONObject jsonObject = new JSONObject(result1);
+                        int status = jsonObject.getInt("status");
+                        Log.d("Result: status ",""+status);
+                        if (status == 1200){
+                            Utils.ToastTextThread(AllDeviceActivity.this,"设备删除成功");
+                            deviceList.clear();
+                            getData();
+                            EventBus.getDefault().post(new MessageEvent());
+                        }else if (status == 1404){
+                            Utils.ToastTextThread(AllDeviceActivity.this,"账号不合法或该账户不存在");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         });
