@@ -15,7 +15,9 @@ import java.util.List;
 
 import jxl.Workbook;
 import jxl.WorkbookSettings;
+import jxl.format.Alignment;
 import jxl.format.Colour;
+import jxl.format.VerticalAlignment;
 import jxl.write.Label;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
@@ -54,8 +56,11 @@ public class ExcelUtil {
 
             arial12font = new WritableFont(WritableFont.ARIAL, 10);
             arial12format = new WritableCellFormat(arial12font);
+            arial12format.setAlignment(Alignment.CENTRE);
+            arial12format.setVerticalAlignment(VerticalAlignment.CENTRE);
             //对齐格式
-            arial10format.setAlignment(jxl.format.Alignment.CENTRE);
+            arial10format.setAlignment(Alignment.CENTRE);
+            arial10format.setVerticalAlignment(VerticalAlignment.CENTRE);
             //设置边框
             arial12format.setBorder(jxl.format.Border.ALL, jxl.format.BorderLineStyle.THIN);
 
@@ -87,6 +92,7 @@ public class ExcelUtil {
                 sheet.addCell(new Label(col, 0, colName[col], arial10format));
             }
             //设置行高
+            sheet.mergeCells(0,1,0,3);
             sheet.setRowView(0, 340);
             workbook.write();
         } catch (Exception e) {

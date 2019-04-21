@@ -53,7 +53,7 @@ public class TableFragment extends Fragment {
     private Context mContext;
     private SmartTable table;
     private Spinner spinner;
-    private ArrayAdapter arr_adapter;
+    private Myadapter arr_adapter;
     private List<String> data_list;
     private static final String DEVICE_URL = PublicData.DOMAIN+"/api/user/getAllDevices";
     private static final String METER_URL = PublicData.DOMAIN+"/api/user/getDataByDevice";
@@ -96,8 +96,6 @@ public class TableFragment extends Fragment {
                 //传进来的position 作为numlist的index
                 MeterList.clear();
                 getMeterData(deviceIdList.get(position));
-
-
             }
 
             @Override
@@ -161,15 +159,18 @@ public class TableFragment extends Fragment {
                                 deviceNameList.add(jsonObject2.optString("deviceName"));
                                 deviceIdList.add(jsonObject2.optString("deviceNo"));
                             }
+                            deviceIdList.add("1");
+                            deviceNameList.add("选择查看设备");
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     //适配器
-                                    arr_adapter= new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, deviceNameList);
+                                    arr_adapter= new Myadapter(mContext, android.R.layout.simple_spinner_item, deviceNameList);
                                     //设置样式
                                     arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     //加载适配器
                                     spinner.setAdapter(arr_adapter);
+                                    spinner.setSelection(deviceNameList.size()-1,true);
 
                                 }
                             });
@@ -235,27 +236,23 @@ public class TableFragment extends Fragment {
                             }
 
                             Collections.sort(list);
-                            Log.d("dddddddddddd",Arrays.toString(list.toArray()));
-                            Log.d("dddddddddddd",list.get(0));
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
-                                MeterList.add(new Equipment(String.valueOf(list.indexOf(jsonObject2.getString("meterId"))+1),
+                                MeterList.add(new Equipment(String.valueOf(list.get(i).substring(4)),
                                         jsonObject2.optString("data"),
                                         jsonObject2.optString("entryTime"),
                                         jsonObject2.optString("entryUsername")));
-
                             }
-
-                            table.setData(MeterList);
-                            table.getConfig().setColumnTitleStyle(new FontStyle(54,Color.BLUE));
-                            table.getConfig().setTableTitleStyle(new FontStyle(80,Color.BLACK));
-                            table.getConfig().setContentStyle(new FontStyle(50,Color.BLACK));
-                            table.getConfig().setShowXSequence(false);
-                            table.getConfig().setShowYSequence(false);
-
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"设备id错误或当前设备没有仪表信息");
+                            Utils.ToastTextThread(mContext,"当前设备没有仪表信息");
+                            MeterList.add(new Equipment("无","无","无","无"));
                         }
+                        table.setData(MeterList);
+                        table.getConfig().setColumnTitleStyle(new FontStyle(54,Color.BLUE));
+                        table.getConfig().setTableTitleStyle(new FontStyle(80,Color.BLACK));
+                        table.getConfig().setContentStyle(new FontStyle(50,Color.BLACK));
+                        table.getConfig().setShowXSequence(false);
+                        table.getConfig().setShowYSequence(false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -286,5 +283,19 @@ public class TableFragment extends Fragment {
             EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+    class Myadapter<T> extends ArrayAdapter{
+        public Myadapter(@NonNull Context context, int resource, @NonNull List<T> objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public int getCount() {
+            //返回数据的统计数量，大于0项则减去1项，从而不显示最后一项
+            int i = super.getCount();
+            return i>0?i-1:i;
+        }
+    }
+
 
 }

@@ -11,6 +11,12 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:translationZ="3dp">
+        <TextView
+            android:layout_margin="10dp"
+            android:textSize="17sp"
+            android:text="当前用户"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
         <LinearLayout
             android:padding="10dp"
             android:layout_width="match_parent"
@@ -25,12 +31,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:text="用户名："/>
                 <TextView
                     android:id="@+id/text_user_name"
                     android:text="dd"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
@@ -44,11 +50,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="帐号："
-                    android:textSize="20sp"/>
+                    android:textSize="18sp"/>
                 <TextView
                     android:id="@+id/text_user_id"
                     android:text="dd"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
@@ -61,7 +67,7 @@
     <Button
         android:layout_below="@id/card_id"
 
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:id="@+id/manager"
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"
@@ -75,7 +81,7 @@
 
         android:textSize="18sp"/>
     <Button
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/btn_excel_out"
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"
@@ -83,11 +89,11 @@
         android:background="@drawable/shape_btn"
         android:text="导出所有数据"
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
     <Button
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:id="@+id/btn_in_device"
         android:layout_marginLeft="80dp"
         android:layout_marginRight="80dp"

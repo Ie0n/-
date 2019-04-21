@@ -43,14 +43,16 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ReadNumber extends AppCompatActivity implements View.OnClickListener, Callback {
-    private String device,tab;
+    private String device, tab;
     private String meterid;
     private Button speechr;
     private Button textin;
     private EditText editxt;
-    private TextView tabTv,devTv,txtTv;
-    /**辅助变量**/
-    private String d,m,result_speech,result_edit;
+    private TextView tabTv, devTv, txtTv;
+    /**
+     * 辅助变量
+     **/
+    private String d, m, result_speech, result_edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,24 +70,25 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         tab = intent_task.getStringExtra("tab");
         meterid = intent_task.getStringExtra("meterid");
         //初始化SDK
-        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=5c7b8620");
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c7b8620");
         findview();
         //设置文本框内容
         devTv.setText(device);
         tabTv.setText(tab);
     }
-    private void findview(){
+
+    private void findview() {
         devTv = findViewById(R.id.device_read);
         tabTv = findViewById(R.id.tab_read);
 
-        speechr=(Button)findViewById(R.id.yuyin);
+        speechr = (Button) findViewById(R.id.yuyin);
         speechr.setOnClickListener(this);
 
-        textin=(Button)findViewById(R.id.textinput);
+        textin = (Button) findViewById(R.id.textinput);
         textin.setOnClickListener(this);
 
-        editxt=(EditText)findViewById(R.id.edit_nn);
-        txtTv=(TextView)findViewById(R.id.resultnum);
+        editxt = (EditText) findViewById(R.id.edit_nn);
+        txtTv = (TextView) findViewById(R.id.resultnum);
 
     }
 
@@ -137,34 +140,26 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.yuyin:
-              initSpeech(this);
+                initSpeech(this);
                 break;
             case R.id.textinput:
-               /**在这里写上传数据逻辑**/
+                /**在这里写上传数据逻辑**/
                 result_edit = editxt.getText().toString();
                 String result = result_edit;
-                if (result_speech == null && result_edit.equals("")){
+                if (result_speech == null && result_edit.equals("")) {
                     Toast.makeText(this, "请语音或手动录入参数", Toast.LENGTH_SHORT).show();
                     break;
                 }
-                if(TextUtils.isEmpty(result)){
+                if (TextUtils.isEmpty(result)) {
                     result = result_speech;
                 }
-                if (TextUtils.isEmpty(result)){
-                    Toast.makeText(this,"请输入值",Toast.LENGTH_LONG).show();
+                if (result_speech != null && !result_edit.equals("")) {
+                    result = result_edit;
                 }
                 try {
-                    if (result_speech != null && !result_edit.equals("")){
-                        result = result_edit;
-//                    if (r>=7.5&&r<10.5) {
-                        updateResult(result);
-//                    }else {
-//                        Toast.makeText(this,"请输入合适的值",Toast.LENGTH_LONG).show();
-//                    }
-                    }
-
-                }catch (NumberFormatException e){
-                    Toast.makeText(this,"请输入数字",Toast.LENGTH_LONG).show();
+                    updateResult(result);
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "请输入数字", Toast.LENGTH_LONG).show();
                 }
 
                 break;
@@ -173,39 +168,39 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         }
     }
 
-    private void updateResult(String result){
+    private void updateResult(String result) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String entry = simpleDateFormat.format(new Date(System.currentTimeMillis()));
         RequestBody body = new FormBody.Builder()
-                .add("userNo",String.valueOf(User.getInstance().getuserNo()))
-                .add("meterId",String.valueOf(meterid))
-                .add("data",result)
-                .add("entryTime",entry)
+                .add("userNo", String.valueOf(User.getInstance().getuserNo()))
+                .add("meterId", String.valueOf(meterid))
+                .add("data", result)
+                .add("entryTime", entry)
                 .build();
-        String url = PublicData.DOMAIN+"/api/user/entryData";
-        HttpRequest.getInstance().post(url,body,this,PublicData.getCookie(this));
+        String url = PublicData.DOMAIN + "/api/user/entryData";
+        HttpRequest.getInstance().post(url, body, this, PublicData.getCookie(this));
     }
 
     @Override
     public void onFailure(Call call, IOException e) {
-        Utils.ToastTextThread(this,e.getMessage());
+        Utils.ToastTextThread(this, e.getMessage());
     }
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        if (response.isSuccessful()){
+        if (response.isSuccessful()) {
             String body = PublicData.clearChar(response.body().string());
-            Log.d("res-",body);
+            Log.d("res-", body);
             Gson gson = new Gson();
-            StatusResponse r = gson.fromJson(body,StatusResponse.class);
-            if (r.getStatus() == 1200){
-                Utils.ToastTextThread(this,r.getStatusinfo().getMessage());
+            StatusResponse r = gson.fromJson(body, StatusResponse.class);
+            if (r.getStatus() == 1200) {
+                Utils.ToastTextThread(this, r.getStatusinfo().getMessage());
                 EventBus.getDefault().post(new MessageEvent());
                 ReadNumber.this.finish();
-            }else{
-                Utils.ToastTextThread(this,r.getStatusinfo().getMessage());
+            } else {
+                Utils.ToastTextThread(this, r.getStatusinfo().getMessage());
             }
-        }else {
+        } else {
 
         }
     }
