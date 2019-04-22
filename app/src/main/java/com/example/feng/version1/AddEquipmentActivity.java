@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.EquipmentAdapter;
 import com.example.feng.version1.bean.Device;
 import com.example.feng.version1.bean.DeviceCreateResponse;
@@ -62,7 +62,6 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         mContext = this;
         Intent intent = getIntent();
         deviceNo = intent.getStringExtra("deviceNo");
-        Log.d("-aaaa","onCreate"+deviceNo);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -119,7 +118,6 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         }
         String cookies = PublicData.getCookie(mContext);
         String url = PublicData.DOMAIN+"/api/user/addDevice";
-        Log.d("-aaaa","confirm"+deviceNo);
         RequestBody requestBody = new FormBody.Builder()
                 .add("userNo",String.valueOf(User.getInstance().getuserNo()))
                 .add("deviceName", device.getDeviceName())
@@ -144,7 +142,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             if (createResponse.getStatus() == 1200){
                 addMeters();
             }else if (createResponse.getStatus()== 1404) {
-                Utils.ToastTextThread(mContext,createResponse.getStatusinfo().getMessage());
+                ToastUtil.ToastTextThread(mContext,createResponse.getStatusinfo().getMessage());
             }
         }
     }
@@ -171,9 +169,9 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                             Gson gson = new GsonBuilder().create();
                             StatusResponse r = gson.fromJson(body,StatusResponse.class);
                             if (r.getStatus() != 1200){
-                                Utils.ToastTextThread(mContext,r.getStatusinfo().getMessage());
+                                ToastUtil.ToastTextThread(mContext,r.getStatusinfo().getMessage());
                             }else {
-                                Utils.ToastTextThread(mContext,"添加仪表:"+name+"成功");
+                                ToastUtil.ToastTextThread(mContext,"添加仪表:"+name+"成功");
 
                             }
                         }
@@ -182,7 +180,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                     e.printStackTrace();
                 }finally {
                     AddEquipmentActivity.this.finish();
-                    Utils.ToastTextThread(AddEquipmentActivity.this,"上传结束");
+                    ToastUtil.ToastTextThread(AddEquipmentActivity.this,"上传结束");
                     EventBus.getDefault().post(new MessageEvent());
                 }
             }

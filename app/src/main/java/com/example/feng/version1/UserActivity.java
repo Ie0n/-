@@ -20,10 +20,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.example.feng.version1.Public.PublicData;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.UserAdapter;
 import com.example.feng.version1.bean.User;
 
@@ -121,7 +120,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("users");
@@ -158,7 +156,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                                 }
                             });
                         }else if (status == 1404){
-                            Utils.ToastTextThread(UserActivity.this,"管理员用户账号错误或没有管理员权限");
+                            ToastUtil.ToastTextThread(UserActivity.this,"管理员用户账号错误或没有管理员权限");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -175,14 +173,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         final PopupWindow mPopWindow = new PopupWindow(mPopView, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        //获取弹窗的宽高
         mPopView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupWidth = mPopView.getMeasuredWidth();
         int popupHeight = mPopView.getMeasuredHeight();
-        //获取父控件位置
         int[] location = new int[2];
         v.getLocationOnScreen(location);
-        //设置显示位置
         mPopWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 2, location[1]
                 - popupHeight/3);
         mPopWindow.update();
@@ -222,18 +217,16 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
-                            Utils.ToastTextThread(UserActivity.this,"删除成功");
+                            ToastUtil.ToastTextThread(UserActivity.this,"删除成功");
                                 userList.clear();
                                 getData();
                         }else if (status == 1404){
-                            Utils.ToastTextThread(UserActivity.this,"账号不合法或该账户不存在");
+                            ToastUtil.ToastTextThread(UserActivity.this,"账号不合法或该账户不存在");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -270,14 +263,14 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onStart() {
         super.onStart();
-        if(!EventBus.getDefault().isRegistered(this)){//加上判断
+        if(!EventBus.getDefault().isRegistered(this)){
             EventBus.getDefault().register(this);
         }
     }
 
     @Override
     protected void onDestroy() {
-        if (EventBus.getDefault().isRegistered(this))//加上判断
+        if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
         super.onDestroy();
     }

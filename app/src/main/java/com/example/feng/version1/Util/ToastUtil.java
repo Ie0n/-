@@ -5,7 +5,7 @@ import android.widget.Toast;
 
 import com.example.feng.version1.MyApplication;
 
-public class Utils {
+public class ToastUtil {
     public static void ToastTextThread(final Context context, final String text) {
         MyApplication.getInstance().getHandler().post(new Runnable() {
             @Override

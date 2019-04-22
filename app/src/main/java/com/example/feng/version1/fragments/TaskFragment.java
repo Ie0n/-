@@ -20,7 +20,7 @@ import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
 import com.example.feng.version1.Task.SelectTabActivity;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.User;
 import com.yzq.testzxing.zxing.android.CaptureActivity;
 
@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -57,7 +56,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = "-dd";
 
     private static final String DECODED_CONTENT_KEY = "codedContent";
-    private static final String DECODED_BITMAP_KEY = "codedBitmap";
     private static final int REQUEST_CODE_ADD = 0x0000;
     private static final int REQUEST_CODE_INPUT = 0x0001;
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
@@ -144,12 +142,10 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
-                        int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
+                        int status = jsonObject.getInt("status");;
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("devices");
@@ -160,7 +156,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                             }
 
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"当前没有数据信息");
+                            ToastUtil.ToastTextThread(mContext,"当前没有数据信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -175,8 +171,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 扫描二维码/条码回传
-        //录入信息
         if (requestCode == REQUEST_CODE_INPUT && resultCode == RESULT_OK) {
 
             if (data != null){
@@ -187,7 +181,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                     Intent intent = new Intent();
                     intent.putExtra("deviceNo",content);
                     intent.putExtra("deviceName",deviceNameList.get(i));
-                    intent.setClass(mContext,SelectTabActivity.class);// 制定传递对象
+                    intent.setClass(mContext,SelectTabActivity.class);
                     startActivity(intent);
                 }else {
                     Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
@@ -202,10 +196,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             if (data != null){
                 content = data.getStringExtra(DECODED_CONTENT_KEY);
                 if (deviceList.contains(content)){
-                    Utils.ToastTextThread(mContext,"该设备已录入");
+                    ToastUtil.ToastTextThread(mContext,"该设备已录入");
                 }else {
-                    //未录入设备 打开录入设备
-
                     Intent intent = new Intent();
                     intent.putExtra("deviceNo",content);
                     intent.setClass(mContext,AddEquipmentActivity.class);
@@ -214,18 +206,11 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 }
             }
         }
-
-        //添加设备
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            /**
-             * 按下设备键扫码，根据url查询得到设备号
-             * 若与publicdata中设备号一致，则进入MeterNum.class
-             * */
             case R.id.r1:
                 Intent intent = new Intent(mContext,
                         CaptureActivity.class);

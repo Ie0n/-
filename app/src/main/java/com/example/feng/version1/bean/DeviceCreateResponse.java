@@ -2,12 +2,6 @@ package com.example.feng.version1.bean;
 
 public class DeviceCreateResponse {
 
-    /**
-     * data : {}
-     * status : 1200
-     * statusInfo : {"message":"添加成功","detail":"OK"}
-     */
-
     private DataBean data;
     private int status;
     private StatusInfoBean statusinfo;

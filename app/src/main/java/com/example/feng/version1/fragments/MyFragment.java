@@ -12,19 +12,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.feng.version1.AllDeviceActivity;
 import com.example.feng.version1.LoginActivity;
 import com.example.feng.version1.MessageEvent;
-import com.example.feng.version1.MyApplication;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
 import com.example.feng.version1.UserActivity;
 import com.example.feng.version1.Util.ExcelUtil;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.User;
 
@@ -76,7 +74,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_my, container, false);
         user = User.getInstance();
         initView(view);
-        //拿到user
         return view;
     }
 
@@ -133,19 +130,15 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                                         jsonObject2.optString("data"),
                                         jsonObject2.optString("entryTime"),
                                         jsonObject2.optString("entryUsername")
-                                        ));
+                                        )
+                                );
                             }
-
-
-
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"当前没有设备信息");
+                            ToastUtil.ToastTextThread(mContext,"当前没有设备信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         });
@@ -194,10 +187,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
     }
 
     private void printOutExcel(){
-
-
-
-
         String hh = ".xls";
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");

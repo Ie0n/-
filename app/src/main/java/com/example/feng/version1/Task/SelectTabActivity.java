@@ -13,13 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.MetersAdapter;
 import com.example.feng.version1.bean.StatusResponse;
 import com.example.feng.version1.bean.User;
@@ -44,18 +43,12 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     private FloatingActionButton confirm;
     private String deviceName,deviceNo;
     private TextView deviceTv;
-    private String [] tabs= {
-            "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八",
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_tab);
         mContext = this;
-        /******
-         * 设置状态栏透明
-         * **/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -97,7 +90,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     @Override
     public void onFailure(Call call, IOException e) {
         Log.d("res-",e.getMessage());
-        Utils.ToastTextThread(mContext,e.getMessage());
+        ToastUtil.ToastTextThread(mContext,e.getMessage());
     }
 
     @Override
@@ -115,7 +108,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
                     }
                 });
             }else {
-                Utils.ToastTextThread(mContext,metasResponse.getStatusinfo().getMessage());
+                ToastUtil.ToastTextThread(mContext,metasResponse.getStatusinfo().getMessage());
             }
         }else {
 
@@ -126,7 +119,6 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.confirm_btn:
-                //点击确认按钮执行的操作
                 showDialog();
                 break;
             default:
@@ -141,10 +133,9 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     private void showDialog(){
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setIcon(R.mipmap.icon)//设置标题的图片
-                .setTitle("提示")//设置对话框的标题
-                .setMessage("请先确认仪表数据是否录入完整")//设置对话框的内容
-                //设置对话框的按钮
+                .setIcon(R.mipmap.icon)
+                .setTitle("提示")
+                .setMessage("请先确认仪表数据是否录入完整")
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

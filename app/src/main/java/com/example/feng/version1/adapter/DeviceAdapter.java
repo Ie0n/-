@@ -21,11 +21,9 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
     private List<Equipment> mData;
     private DeviceAdapter.OnItemListener onItemListener;
     private DeviceAdapter.onItemLongClickListener onItemLongClickListener;
-    private Context mContext;
 
     public DeviceAdapter(Context context, List<Equipment> data) {
         mData = data;
-        mContext = context;
         inflater = LayoutInflater.from(context);
     }
 

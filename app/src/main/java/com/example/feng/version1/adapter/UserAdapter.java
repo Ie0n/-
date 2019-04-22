@@ -21,13 +21,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private List<User> mData;
     private OnItemListener onItemListener;
     private onItemLongClickListener onItemLongClick;
-    private Context mContext;
-    private String password;
     private Map<Integer,String>map = new HashMap<>();
 
     public UserAdapter(Context context, List<User> data) {
         mData = data;
-        mContext = context;
         inflater = LayoutInflater.from(context);
     }
 

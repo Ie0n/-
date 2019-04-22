@@ -20,11 +20,8 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
     private LayoutInflater inflater;
     private List<StatusResponse.DataBean.MetersBean> mData;
     private OnItemListener onItemListener;
-    private Context mContext;
-
     public MetersAdapter(Context context, List<StatusResponse.DataBean.MetersBean> data) {
         mData = data;
-        mContext = context;
         inflater = LayoutInflater.from(context);
     }
 
@@ -79,9 +76,5 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
 
     public interface OnItemListener{
         void onItemClick(View view, int position);
-    }
-
-    public void setConfirmVisible(int position){
-
     }
 }

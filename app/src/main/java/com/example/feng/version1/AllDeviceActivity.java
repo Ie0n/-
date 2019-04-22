@@ -20,12 +20,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.DeviceAdapter;
-import com.example.feng.version1.adapter.MetersAdapter;
 import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.User;
 
@@ -139,7 +137,6 @@ public class AllDeviceActivity extends AppCompatActivity {
                                     adapter.setOnItemLongClickListener(new DeviceAdapter.onItemLongClickListener() {
                                         @Override
                                         public void onItemLongClick(View view, int position, String id,String name) {
-                                            //做删除操作
                                             showPopWindows(view,id,name);
                                         }
                                     });
@@ -148,7 +145,6 @@ public class AllDeviceActivity extends AppCompatActivity {
                                         public void onItemClick(View view, int position) {
                                             Intent intent = new Intent();
                                             intent.setClass(mContext,AllMeterActivity.class);
-//                                          传入设备编号 供查询仪表
                                             intent.putExtra("deviceNo",deviceNoList.get(position));
                                             startActivity(intent);
                                         }
@@ -157,7 +153,7 @@ public class AllDeviceActivity extends AppCompatActivity {
                                 }
                             });
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"账号不合法或该账户不存在");
+                            ToastUtil.ToastTextThread(mContext,"账号不合法或该账户不存在");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -191,21 +187,17 @@ public class AllDeviceActivity extends AppCompatActivity {
         final PopupWindow mPopWindow = new PopupWindow(mPopView, ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT, true);
         mPopWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        //获取弹窗的宽高
         mPopView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         int popupWidth = mPopView.getMeasuredWidth();
         int popupHeight = mPopView.getMeasuredHeight();
-        //获取父控件位置
         int[] location = new int[2];
         v.getLocationOnScreen(location);
-        //设置显示位置
         mPopWindow.showAtLocation(v, Gravity.NO_GRAVITY, (location[0] + v.getWidth() / 2) - popupWidth / 2, location[1]
                 - popupHeight/3);
         mPopWindow.update();
         mPopView.findViewById(R.id.tv_delete_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //发起网络请求删除当前id的item
                 deleteDevice(name,id);
                 if (mPopWindow != null) {
                     mPopWindow.dismiss();
@@ -240,19 +232,17 @@ public class AllDeviceActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
-                            Utils.ToastTextThread(AllDeviceActivity.this,"设备删除成功");
+                            ToastUtil.ToastTextThread(AllDeviceActivity.this,"设备删除成功");
                             deviceList.clear();
                             getData();
                             EventBus.getDefault().post(new MessageEvent());
                         }else if (status == 1404){
-                            Utils.ToastTextThread(AllDeviceActivity.this,"账号不合法或该账户不存在");
+                            ToastUtil.ToastTextThread(AllDeviceActivity.this,"账号不合法或该账户不存在");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

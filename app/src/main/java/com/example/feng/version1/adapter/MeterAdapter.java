@@ -18,11 +18,9 @@ public class MeterAdapter  extends RecyclerView.Adapter<MeterAdapter.ViewHolder>
     private List<Meter> mData;
     private MeterAdapter.OnItemListener onItemListener;
     private MeterAdapter.onItemLongClickListener onItemLongClickListener;
-    private Context mContext;
 
     public MeterAdapter(Context context, List<Meter> data) {
         mData = data;
-        mContext = context;
         inflater = LayoutInflater.from(context);
     }
 

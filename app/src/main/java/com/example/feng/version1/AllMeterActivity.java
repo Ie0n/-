@@ -20,13 +20,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
-import com.example.feng.version1.Util.Utils;
-import com.example.feng.version1.adapter.DeviceAdapter;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.MeterAdapter;
-import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.Meter;
 import com.example.feng.version1.bean.User;
 
@@ -152,7 +149,7 @@ public class AllMeterActivity extends AppCompatActivity {
                                 }
                             });
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"设备id错误或当前设备没有仪表信息");
+                            ToastUtil.ToastTextThread(mContext,"设备id错误或当前设备没有仪表信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -213,7 +210,6 @@ public class AllMeterActivity extends AppCompatActivity {
         builder
                 .addQueryParameter("userNo",String.valueOf(user.getuserNo()))
                 .addQueryParameter("meterId",id);
-        Log.d("!!!!!",id+"-----"+String.valueOf(user.getuserNo()));
         Request request = new Request
                 .Builder()
                 .url(builder.build())
@@ -234,19 +230,17 @@ public class AllMeterActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
-                            Utils.ToastTextThread(AllMeterActivity.this,"设备删除成功");
+                            ToastUtil.ToastTextThread(AllMeterActivity.this,"设备删除成功");
                             meterList.clear();
                             getData();
                             EventBus.getDefault().post(new MessageEvent());
                         }else if (status == 1404){
-                            Utils.ToastTextThread(AllMeterActivity.this,"账号不合法或该账户不存在");
+                            ToastUtil.ToastTextThread(AllMeterActivity.this,"账号不合法或该账户不存在");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

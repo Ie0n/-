@@ -21,11 +21,9 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
     private LayoutInflater inflater;
     private List<Equipment> mData;
     private OnItemListener onItemListener;
-    private Context mContext;
 
     public EquipmentAdapter(Context context, List<Equipment> data) {
         mData = data;
-        mContext = context;
         inflater = LayoutInflater.from(context);
     }
 

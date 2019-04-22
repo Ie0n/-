@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.feng.version1.Public.PublicData;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.User;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,12 +36,10 @@ import okhttp3.Response;
 
 public class EditUserInfoActivity extends AppCompatActivity {
 
-    private Context mContext;
     private String name,id,editOrAdd,password;
     private int position;
     private User user;
     private EditText edit_name,edit_id,edit_password;
-    private int managerNo;
     private static final String EDIT_URL = PublicData.DOMAIN+"/api/admin/changeUser";
     private static final String ADD_URL = PublicData.DOMAIN+"/api/admin/addUser";
     @Override
@@ -56,7 +54,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
         password = intent.getStringExtra("password");
         editOrAdd = intent.getStringExtra("status");
         initView();
-        //1是编辑 0是添加
         if (editOrAdd.equals("1")){
             setEditCustomActionBar();
             edit_name.setText(name);
@@ -85,7 +82,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         ImageView back = mActionBarView.findViewById(R.id.pic);
         TextView confirm = mActionBarView.findViewById(R.id.bar_confirm);
-        managerNo = user.getuserNo();
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +106,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         ImageView back = mActionBarView.findViewById(R.id.pic);
         TextView confirm = mActionBarView.findViewById(R.id.bar_confirm);
-        managerNo = user.getuserNo();
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -147,9 +142,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
                 .add("username",edit_name.getText().toString())
                 .add("password",edit_password.getText().toString())
                 .build();
-        Log.d("info",String.valueOf(user.getuserNo())+"--"+edit_id.getText().toString()
-                +"--"+edit_name.getText().toString()+"--"+edit_password.getText().toString());
-        Log.d("info",getCookie());
         final Request request = new Request
                 .Builder()
                 .url(EditUserInfoActivity.EDIT_URL)
@@ -169,18 +161,16 @@ public class EditUserInfoActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
-                            Utils.ToastTextThread(EditUserInfoActivity.this,"修改成功");
+                            ToastUtil.ToastTextThread(EditUserInfoActivity.this,"修改成功");
                             EventBus.getDefault().post(new MessageEvent());
                             EditUserInfoActivity.this.finish();
                         }else if (status == 1404){
-                            Utils.ToastTextThread(EditUserInfoActivity.this,"用户账号错误或用户不存在");
+                            ToastUtil.ToastTextThread(EditUserInfoActivity.this,"用户账号错误或用户不存在");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -199,8 +189,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
                 .add("username",edit_name.getText().toString())
                 .add("password",edit_password.getText().toString())
                 .build();
-        Log.d("info",String.valueOf(user.getuserNo())+"--"+edit_id.getText().toString()
-        +"--"+edit_name.getText().toString()+"--"+edit_password.getText().toString());
         final Request request = new Request
                 .Builder()
                 .url(EditUserInfoActivity.ADD_URL)
@@ -220,18 +208,16 @@ public class EditUserInfoActivity extends AppCompatActivity {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
-                            Utils.ToastTextThread(EditUserInfoActivity.this,"添加成功");
+                            ToastUtil.ToastTextThread(EditUserInfoActivity.this,"添加成功");
                             EventBus.getDefault().post(new MessageEvent());
                             EditUserInfoActivity.this.finish();
                         }else if (status == 1404){
-                            Utils.ToastTextThread(EditUserInfoActivity.this,"用户账号或用户名不能为空或已被占用");
+                            ToastUtil.ToastTextThread(EditUserInfoActivity.this,"用户账号或用户名不能为空或已被占用");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

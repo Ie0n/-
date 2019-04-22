@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,10 +20,9 @@ import com.bin.david.form.data.style.FontStyle;
 import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.User;
-import com.google.gson.JsonObject;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -35,8 +33,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import okhttp3.Call;
@@ -54,7 +50,6 @@ public class TableFragment extends Fragment {
     private SmartTable table;
     private Spinner spinner;
     private Myadapter arr_adapter;
-    private List<String> data_list;
     private static final String DEVICE_URL = PublicData.DOMAIN+"/api/user/getAllDevices";
     private static final String METER_URL = PublicData.DOMAIN+"/api/user/getDataByDevice";
     private List<String> deviceNameList;
@@ -177,7 +172,7 @@ public class TableFragment extends Fragment {
 
 
                         }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"当前没有设备信息");
+                            ToastUtil.ToastTextThread(mContext,"当前没有设备信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -218,33 +213,23 @@ public class TableFragment extends Fragment {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
                         String result1 = clearChar(result);
                         JSONObject jsonObject = new JSONObject(result1);
                         int status = jsonObject.getInt("status");
-                        Log.d("Result: status ",""+status);
                         if (status == 1200){
-                            //把数据加入设备数据表
                             JSONObject data = jsonObject.getJSONObject("data");
-                            JSONArray array = data.getJSONArray("meters");
+                            JSONArray array = data.getJSONArray("metersData");
 
-                            ArrayList<String> list= new ArrayList();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
-                                list.add(jsonObject2.getString("meterId"));
-                            }
-
-                            Collections.sort(list);
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject jsonObject2 = (JSONObject)array.get(i);
-                                MeterList.add(new Equipment(String.valueOf(list.get(i).substring(4)),
+                                MeterList.add(new Equipment(jsonObject2.optString("meterNo"),
                                         jsonObject2.optString("data"),
                                         jsonObject2.optString("entryTime"),
                                         jsonObject2.optString("entryUsername")));
                             }
-                        }else if (status == 1404){
-                            Utils.ToastTextThread(mContext,"当前设备没有仪表信息");
+                        }else if (status == 1404 || status == 1201){
+                            ToastUtil.ToastTextThread(mContext,"当前设备没有仪表信息");
                             MeterList.add(new Equipment("无","无","无","无"));
                         }
                         table.setData(MeterList);
@@ -291,7 +276,6 @@ public class TableFragment extends Fragment {
 
         @Override
         public int getCount() {
-            //返回数据的统计数量，大于0项则减去1项，从而不显示最后一项
             int i = super.getCount();
             return i>0?i-1:i;
         }

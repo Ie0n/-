@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
 
 
         for (int index = 0; index < titles.length; index++) {
-            // 加载Tab每个标签的布局
             View view = getLayoutInflater().inflate(R.layout.tab_main_content, null, false);
 
             ImageView icon = view.findViewById(R.id.main_tab_icon);
@@ -61,22 +60,15 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
 
             icon.setImageResource(iconID[index]);
             title.setText(titles[index]);
-            // 设置布局的整体颜色
             tab.setBackgroundColor(getResources().getColor(R.color.white));
 
-            // 为TabHost添加Tab
             mTabHost.addTab(
-                    // 参数为Tag，是Tab的标记
                     mTabHost.newTabSpec(titles[index])
-                            // 将视图指定为选项卡指示符。
                             .setIndicator(view)
-                            // 设置标签要显示的内容，
-                            // 但此处因为是用Fragment做的ViewPager，所以此处设置为空了，参数可以是View的Id
                             .setContent(this)
             );
         }
 
-        // 4个Fragment资源。
         final Fragment[] fragments = new Fragment[]{
                 TaskFragment.newInstance(),
                 TableFragment.newInstance(),
@@ -93,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
             }
         });
 
-        // 设置ViewPager改变Tab跟着改变
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener(){
             @Override
             public void onPageScrolled(int i, float v, int i1) {
@@ -102,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
 
             @Override
             public void onPageSelected(int i) {
-                // 设置当前的Tab与ViewPager的位置相对应
                 if (mTabHost != null) {
                     mTabHost.setCurrentTab(i);
                 }
@@ -113,12 +103,10 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
             public void onPageScrollStateChanged(int i) { }
         });
 
-        // 设置Tab改变ViewPager也跟着改变
         mTabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener(){
             @Override
             public void onTabChanged(String tabId) {
                 if (mTabHost != null) {
-                    // 获取当前Tab的位置
                     int position = mTabHost.getCurrentTab();
                     mViewPager.setCurrentItem(position);
                 }
@@ -127,14 +115,9 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
 
     }
 
-    public TabWidget getTabWidget() {
-        return mTabWidget;
-    }
-
     @Override
     public View createTabContent(String tag) {
         View view = new View(this);
-        // 将view隐藏起来，因为这里用ViewPager显示内容
         view.setMinimumHeight(0);
         view.setMinimumWidth(0);
         return view;

@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
-import com.example.feng.version1.Util.Utils;
+import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.StatusResponse;
 import com.example.feng.version1.bean.User;
 import com.example.feng.version1.http.HttpRequest;
@@ -49,18 +49,12 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
     private Button textin;
     private EditText editxt;
     private TextView tabTv, devTv, txtTv;
-    /**
-     * 辅助变量
-     **/
-    private String d, m, result_speech, result_edit;
+    private String result_speech, result_edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_number);
-        /******
-         * 设置状态栏透明
-         * **/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -69,10 +63,8 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         device = intent_task.getStringExtra("device");
         tab = intent_task.getStringExtra("tab");
         meterid = intent_task.getStringExtra("meterid");
-        //初始化SDK
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c7b8620");
         findview();
-        //设置文本框内容
         devTv.setText(device);
         tabTv.setText(tab);
     }
@@ -81,32 +73,26 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         devTv = findViewById(R.id.device_read);
         tabTv = findViewById(R.id.tab_read);
 
-        speechr = (Button) findViewById(R.id.yuyin);
+        speechr = findViewById(R.id.yuyin);
         speechr.setOnClickListener(this);
 
-        textin = (Button) findViewById(R.id.textinput);
+        textin = findViewById(R.id.textinput);
         textin.setOnClickListener(this);
 
-        editxt = (EditText) findViewById(R.id.edit_nn);
-        txtTv = (TextView) findViewById(R.id.resultnum);
+        editxt =  findViewById(R.id.edit_nn);
+        txtTv =  findViewById(R.id.resultnum);
 
     }
 
     public void initSpeech(final Context context) {
-        //1.创建RecognizerDialog对象
         RecognizerDialog mDialog = new RecognizerDialog(context, null);
-        //2.设置accent、language等参数
         mDialog.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
         mDialog.setParameter(SpeechConstant.ACCENT, "mandarin");
-        //3.设置回调接口
         mDialog.setListener(new RecognizerDialogListener() {
             @Override
             public void onResult(RecognizerResult recognizerResult, boolean isLast) {
                 if (!isLast) {
-                    //解析语音
-                    //返回的result为识别后的汉字,直接赋值到TextView上即可
                     result_speech = parseVoice(recognizerResult.getResultString());
-                    //设置文本框内容
                     txtTv.setText(result_speech);
                 }
             }
@@ -116,7 +102,6 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
 
             }
         });
-        //4.显示dialog，接收语音输入
         mDialog.show();
     }
 
@@ -143,7 +128,6 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
                 initSpeech(this);
                 break;
             case R.id.textinput:
-                /**在这里写上传数据逻辑**/
                 result_edit = editxt.getText().toString();
                 String result = result_edit;
                 if (result_speech == null && result_edit.equals("")) {
@@ -183,7 +167,7 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onFailure(Call call, IOException e) {
-        Utils.ToastTextThread(this, e.getMessage());
+        ToastUtil.ToastTextThread(this, e.getMessage());
     }
 
     @Override
@@ -194,11 +178,11 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
             Gson gson = new Gson();
             StatusResponse r = gson.fromJson(body, StatusResponse.class);
             if (r.getStatus() == 1200) {
-                Utils.ToastTextThread(this, r.getStatusinfo().getMessage());
+                ToastUtil.ToastTextThread(this, r.getStatusinfo().getMessage());
                 EventBus.getDefault().post(new MessageEvent());
                 ReadNumber.this.finish();
             } else {
-                Utils.ToastTextThread(this, r.getStatusinfo().getMessage());
+                ToastUtil.ToastTextThread(this, r.getStatusinfo().getMessage());
             }
         } else {
 
