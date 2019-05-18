@@ -49,7 +49,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     private LinearLayoutManager layoutManager;
     private int count = 0;
     private EditText driverName;
-    private String deviceNo;
+    private String deviceNo,site,task;
     private Device device = new Device();
     private String [] tabs= {
             "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八"
@@ -62,6 +62,8 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         mContext = this;
         Intent intent = getIntent();
         deviceNo = intent.getStringExtra("deviceNo");
+        site = intent.getStringExtra("site");
+        task = intent.getStringExtra("task");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
@@ -122,6 +124,8 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                 .add("userNo",String.valueOf(User.getInstance().getuserNo()))
                 .add("deviceName", device.getDeviceName())
                 .add("deviceNo", deviceNo)
+                .add("site",site)
+                .add("task",task)
                 .build();
         HttpRequest.getInstance().post(url,requestBody,this,cookies);
 
@@ -137,7 +141,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     public void onResponse(Call call, Response response) throws IOException {
         if (response.isSuccessful()){
             Gson gson = new GsonBuilder().create();
-            String body = PublicData.clearChar(response.body().string());
+            String body = (response.body().string());
             DeviceCreateResponse createResponse = gson.fromJson(body,DeviceCreateResponse.class);
             if (createResponse.getStatus() == 1200){
                 addMeters();
@@ -165,7 +169,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                                 .build();
                         Response response = HttpRequest.getInstance().post(url, requestBody, cookie);
                         if (response.isSuccessful()) {
-                            String body = PublicData.clearChar(response.body().string());
+                            String body = (response.body().string());
                             Gson gson = new GsonBuilder().create();
                             StatusResponse r = gson.fromJson(body,StatusResponse.class);
                             if (r.getStatus() != 1200){

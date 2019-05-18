@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements TabHost.TabConten
                 if (mTabHost != null) {
                     mTabHost.setCurrentTab(i);
                 }
-
             }
 
             @Override

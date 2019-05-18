@@ -74,11 +74,6 @@ public class AllMeterActivity extends AppCompatActivity {
         meterList = new ArrayList<>();
         getData();
     }
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
-    }
 
     @NonNull
     private String getCookie() {
@@ -112,11 +107,8 @@ public class AllMeterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
-
-                    String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
@@ -228,11 +220,8 @@ public class AllMeterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
-
-                    String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             ToastUtil.ToastTextThread(AllMeterActivity.this,"设备删除成功");

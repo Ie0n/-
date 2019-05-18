@@ -173,7 +173,7 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         if (response.isSuccessful()) {
-            String body = PublicData.clearChar(response.body().string());
+            String body = (response.body().string());
             Log.d("res-", body);
             Gson gson = new Gson();
             StatusResponse r = gson.fromJson(body, StatusResponse.class);

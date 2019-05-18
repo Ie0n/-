@@ -20,12 +20,6 @@ public class PublicData {
     public static String content = null;
 
 
-    public static String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
-    }
-
     @NonNull
     public static String  getCookie(Context context) {
         SharedPreferences sp = context.getSharedPreferences("Cookie", MODE_PRIVATE);

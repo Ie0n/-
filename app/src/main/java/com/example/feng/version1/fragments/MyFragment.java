@@ -48,7 +48,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.feng.version1.Public.PublicData.clearChar;
 
 public class MyFragment extends Fragment implements View.OnClickListener {
 
@@ -115,8 +114,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
 
                     String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             demoBeanList = new ArrayList<>();
@@ -214,7 +212,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
 
 
         ExcelUtil.writeObjListToExcel(demoBeanList, Environment.getExternalStorageDirectory().toString()+
-
                 File.separator +"DataExcel", result,mContext);
 
     }

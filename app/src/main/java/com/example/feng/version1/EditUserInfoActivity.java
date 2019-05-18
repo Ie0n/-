@@ -129,12 +129,6 @@ public class EditUserInfoActivity extends AppCompatActivity {
                 .concat(";");
     }
 
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
-    }
-
     private void post() {
         RequestBody body = new FormBody.Builder()
                 .add("userNo",String.valueOf(user.getuserNo()))
@@ -160,10 +154,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
 
-                    String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             ToastUtil.ToastTextThread(EditUserInfoActivity.this,"修改成功");
@@ -207,10 +199,8 @@ public class EditUserInfoActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
 
-                    String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             ToastUtil.ToastTextThread(EditUserInfoActivity.this,"添加成功");

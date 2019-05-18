@@ -9,6 +9,7 @@ public class Equipment {
     private String deviceName;
     private String meterName;
     private String deviceId;
+    private String task;
     private Long id;
 
     public Equipment(String deviceName, String meterName, String data, String time, String userName) {
@@ -19,11 +20,13 @@ public class Equipment {
         this.userName = userName;
     }
 
-    public Equipment(String id,String data,String time,String enterUserName){
+    public Equipment(String id,String data,String time,String enterUserName,String site,String task){
         this.time = time;
         this.userName = enterUserName;
         this.tabNum = data;
         this.tabId = id;
+        this.site = site;
+        this.task = task;
     }
 
     public Equipment(String name, Long id){
@@ -36,13 +39,15 @@ public class Equipment {
         this.deviceId = id;
     }
 
-    @SmartColumn(id = 0,name = "仪表",autoMerge = true)
+    @SmartColumn(id = 0,name = "站点",autoMerge = true)
+    private String site;
+    @SmartColumn(id = 1,name = "仪表",autoMerge = true)
     private String tabId;
-    @SmartColumn(id = 1,name = "数据")
+    @SmartColumn(id = 2,name = "数据")
     private String tabNum;
-    @SmartColumn(id = 2,name = "时间")
+    @SmartColumn(id = 3,name = "时间")
     private String time;
-    @SmartColumn(id = 3,name = "录入人")
+    @SmartColumn(id = 4,name = "录入人")
     private String userName;
 
     public String getName() {
@@ -107,5 +112,21 @@ public class Equipment {
 
     public void setDeviceId(String deviceId) {
         this.deviceId = deviceId;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
     }
 }

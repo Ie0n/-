@@ -18,6 +18,7 @@ import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.Task.MainActivity;
 import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.User;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -86,7 +87,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             default:
                 break;
         }
-
     }
 
     private void getPermission() {
@@ -127,12 +127,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
-    }
-
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
     }
 
     private void saveCookie(String name, String value) {
@@ -182,11 +176,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
+
                     try {
-                        String result1 = clearChar(result);
 
-
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             Headers headers = response.headers();

@@ -83,7 +83,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
-      String url = PublicData.DOMAIN+"/api/user/getDeviceMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+deviceNo;
+        String url = PublicData.DOMAIN+"/api/user/getDeviceMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+deviceNo;
         HttpRequest.getInstance().get(url,this,PublicData.getCookie(mContext));
     }
 
@@ -97,7 +97,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     public void onResponse(Call call, Response response) throws IOException {
         if (response.isSuccessful()){
             Gson gson = new GsonBuilder().create();
-            String body =PublicData.clearChar(response.body().string());
+            String body = (response.body().string());
             StatusResponse metasResponse = gson.fromJson(body,StatusResponse.class);
             if (metasResponse.getStatus() == 1200){
                 meters.addAll(metasResponse.getData().getMeters());

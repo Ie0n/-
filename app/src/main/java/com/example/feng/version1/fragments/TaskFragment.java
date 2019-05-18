@@ -11,11 +11,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.feng.version1.AddEquipmentActivity;
+import com.example.feng.version1.ChooseDeviceActivity;
 import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -52,15 +55,13 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     private TextView userid;
     private RelativeLayout add;
     private RelativeLayout input;
+    private LinearLayout linearLayout;
 
-    private static final String TAG = "-dd";
-
-    private static final String DECODED_CONTENT_KEY = "codedContent";
-    private static final int REQUEST_CODE_ADD = 0x0000;
-    private static final int REQUEST_CODE_INPUT = 0x0001;
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
-
-    private List<String> deviceList,deviceNameList;
+    private static final String DECODED_CONTENT_KEY = "codedContent";
+    private ArrayList<String> deviceList,deviceNameList;
+    private Intent intent;
+    private static final int REQUEST_CODE_INPUT = 0x0001;
 
     private User user;
 
@@ -79,20 +80,27 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         mContext = context;
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        user = User.getInstance();
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
         initView(view);
-
+        setVisible();
         return view;
     }
     private void initView(View view){
         add = view.findViewById(R.id.r1);
+        linearLayout = view.findViewById(R.id.line2);
         add.setOnClickListener(this);
         input = view.findViewById(R.id.r2);
         input.setOnClickListener(this);
-
+        intent = new Intent();
     }
 
     @Override
@@ -101,10 +109,11 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         initData();
     }
 
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
+    private void setVisible(){
+        if (user.getAdmin() == 0){
+            input.setVisibility(View.GONE);
+            linearLayout.setVisibility(View.GONE);
+        }
     }
 
     @NonNull
@@ -119,7 +128,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     private void initData(){
         deviceList = new ArrayList<>();
         deviceNameList = new ArrayList<>();
-        user = User.getInstance();
         HttpUrl.Builder builder = HttpUrl.parse(URL).newBuilder();
         builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()));
         Request request = new Request
@@ -143,9 +151,8 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
 
                     String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
-                        int status = jsonObject.getInt("status");;
+                        JSONObject jsonObject = new JSONObject(result);
+                        int status = jsonObject.getInt("status");
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("devices");
@@ -154,19 +161,19 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                                 deviceList.add(jsonObject2.optString("deviceNo"));
                                 deviceNameList.add(jsonObject2.optString("deviceName"));
                             }
-
+                            intent.putStringArrayListExtra("deviceList",deviceList);
+                            intent.putStringArrayListExtra("deviceNameList",deviceNameList);
                         }else if (status == 1404){
                             ToastUtil.ToastTextThread(mContext,"当前没有数据信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         });
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -186,24 +193,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
                 }else {
                     Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
                 }
-
-
-            }
-
-
-        }
-        if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK){
-            if (data != null){
-                content = data.getStringExtra(DECODED_CONTENT_KEY);
-                if (deviceList.contains(content)){
-                    ToastUtil.ToastTextThread(mContext,"该设备已录入");
-                }else {
-                    Intent intent = new Intent();
-                    intent.putExtra("deviceNo",content);
-                    intent.setClass(mContext,AddEquipmentActivity.class);
-                    startActivity(intent);
-
-                }
             }
         }
     }
@@ -211,16 +200,14 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.r1:
-                Intent intent = new Intent(mContext,
-                        CaptureActivity.class);
-                startActivityForResult(intent, REQUEST_CODE_INPUT);
+            case R.id.r2:
+                intent.setClass(mContext, ChooseDeviceActivity.class);
+                startActivity(intent);
                 break;
 
-            case R.id.r2:
-                Intent intent2 = new Intent(mContext,
-                        CaptureActivity.class);
-                startActivityForResult(intent2, REQUEST_CODE_ADD);
+            case R.id.r1:
+                Intent intent2 = new Intent(mContext, CaptureActivity.class);
+                startActivityForResult(intent2, REQUEST_CODE_INPUT);
                 break;
             default:
                 break;

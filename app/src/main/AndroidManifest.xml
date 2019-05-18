@@ -70,6 +70,7 @@
         <activity android:name=".EditUserInfoActivity" />
         <activity android:name=".AllDeviceActivity" />
         <activity android:name=".AllMeterActivity" />
+        <activity android:name=".ChooseDeviceActivity" />
 
     </application>
 

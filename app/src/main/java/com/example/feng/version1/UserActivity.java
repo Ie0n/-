@@ -77,12 +77,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
-    }
-
     @NonNull
     private String getCookie() {
         SharedPreferences sp = getSharedPreferences("Cookie", MODE_PRIVATE);
@@ -115,10 +109,8 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("Result: ",result);
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
@@ -211,15 +203,11 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             public void onFailure(Call call, IOException e) {
                 Log.d("fail","获取数据失败");
             }
-
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
-
-                    String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             ToastUtil.ToastTextThread(UserActivity.this,"删除成功");
@@ -231,8 +219,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         });

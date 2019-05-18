@@ -100,13 +100,6 @@ public class TableFragment extends Fragment {
         });
     }
 
-
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
-    }
-
     @NonNull
     private String getCookie() {
         SharedPreferences sp = getActivity().getSharedPreferences("Cookie", MODE_PRIVATE);
@@ -139,11 +132,8 @@ public class TableFragment extends Fragment {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
-
-                    String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
 
                         if (status == 1200){
@@ -214,8 +204,7 @@ public class TableFragment extends Fragment {
 
                     String result = response.body().string();
                     try {
-                        String result1 = clearChar(result);
-                        JSONObject jsonObject = new JSONObject(result1);
+                        JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
@@ -226,11 +215,14 @@ public class TableFragment extends Fragment {
                                 MeterList.add(new Equipment(jsonObject2.optString("meterNo"),
                                         jsonObject2.optString("data"),
                                         jsonObject2.optString("entryTime"),
-                                        jsonObject2.optString("entryUsername")));
+                                        jsonObject2.optString("entryUsername"),
+                                        jsonObject2.optString("site"),
+                                        jsonObject2.optString("task")
+                                ));
                             }
                         }else if (status == 1404 || status == 1201){
                             ToastUtil.ToastTextThread(mContext,"当前设备没有仪表信息");
-                            MeterList.add(new Equipment("无","无","无","无"));
+                            MeterList.add(new Equipment("无","无","无","无","无","无"));
                         }
                         table.setData(MeterList);
                         table.getConfig().setColumnTitleStyle(new FontStyle(54,Color.BLUE));
