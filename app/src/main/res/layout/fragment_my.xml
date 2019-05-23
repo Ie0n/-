@@ -66,7 +66,6 @@
 
     <Button
         android:layout_below="@id/card_id"
-
         android:layout_marginTop="40dp"
         android:id="@+id/manager"
         android:layout_marginLeft="80dp"
@@ -75,10 +74,8 @@
         android:layout_height="wrap_content"
         android:text="管理用户"
         android:textColor="@color/yellow"
-
         android:background="@drawable/shape_btn"
         android:visibility="gone"
-
         android:textSize="18sp"/>
     <Button
         android:layout_marginTop="30dp"
@@ -101,7 +98,18 @@
         android:background="@drawable/shape_btn"
         android:text="已录入设备"
         android:textColor="@color/white"
-
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:layout_marginTop="30dp"
+        android:id="@+id/btn_un_usual_data"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_below="@id/btn_in_device"
+        android:background="@drawable/shape_btn"
+        android:text="异常数据"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -111,7 +119,6 @@
         android:layout_marginRight="70dp"
         android:layout_alignParentBottom="true"
         android:textColor="@color/white"
-
         android:text="退出"
         android:background="@drawable/shape_btn"
         android:textSize="16sp"

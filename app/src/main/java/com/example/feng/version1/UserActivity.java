@@ -74,7 +74,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         userList = new ArrayList<>();
         getData();
-
     }
 
     @NonNull
@@ -153,8 +152,6 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         });

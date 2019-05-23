@@ -9,4 +9,25 @@
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
+    <LinearLayout
+        android:id="@+id/line_no_data"
+        android:layout_centerInParent="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <ImageView
+            android:src="@drawable/icon"
+            android:layout_width="50dp"
+            android:layout_gravity="center"
+            android:layout_height="50dp" />
+        <TextView
+            android:layout_gravity="center"
+            android:text="当前没有数据"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
 </RelativeLayout>

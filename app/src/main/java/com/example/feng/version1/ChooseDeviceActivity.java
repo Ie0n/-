@@ -1,6 +1,5 @@
 package com.example.feng.version1;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +18,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.feng.version1.Task.SelectTabActivity;
 import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.User;
 import com.yzq.testzxing.zxing.android.CaptureActivity;
@@ -43,7 +40,7 @@ public class ChooseDeviceActivity extends AppCompatActivity{
     private ArrayList<String> siteList;
     private ArrayList<String> taskList;
     private static final int REQUEST_CODE_ADD = 0x0000;
-    private static final String DECODED_CONTENT_KEY = "codedContent";
+    private static final String  DECODED_CONTENT_KEY = "codedContent";
     private ArrayList<String> deviceList,deviceNameList;
     private String site,task;
 
@@ -115,8 +112,9 @@ public class ChooseDeviceActivity extends AppCompatActivity{
         confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (site.equals("") || task.equals("")){
-                    Toast.makeText(mContext, "", Toast.LENGTH_SHORT).show();
+                if (site == null || task == null){
+                    Toast.makeText(mContext, "请选择任务或站点", Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 Intent intent = new Intent();
                 intent.setClass(mContext,CaptureActivity.class);

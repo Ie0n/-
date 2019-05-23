@@ -31,6 +31,7 @@
         android:id="@+id/rv_equipment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="60dp"
         android:layout_below="@id/line_equipment"/>
 
 

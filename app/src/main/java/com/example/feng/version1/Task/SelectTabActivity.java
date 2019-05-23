@@ -75,11 +75,13 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
                 intent.putExtra("device",deviceName);
                 intent.putExtra("meterid",String.valueOf(meters.get(position).getMeterId()));
                 intent.putExtra("tab",meters.get(position).getMeterName());
-                Log.d("meterid",String.valueOf(meters.get(position).getMeterId()));
+                intent.putExtra("up",String.valueOf(meters.get(position).getDataUpper()));
+                intent.putExtra("low",String.valueOf(meters.get(position).getDataLower()));
                 intent.setClass(mContext,ReadNumber.class);
                 startActivity(intent);
             }
         });
+
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
@@ -89,7 +91,6 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
 
     @Override
     public void onFailure(Call call, IOException e) {
-        Log.d("res-",e.getMessage());
         ToastUtil.ToastTextThread(mContext,e.getMessage());
     }
 

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.bin.david.form.core.SmartTable
+        android:layout_marginTop="38dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="15dp"
+        android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_alignParentBottom="true"
+        android:id="@+id/btn_output_unusual_data"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:layout_below="@id/btn_in_device"
+        android:background="@drawable/shape_btn"
+        android:text="导出数据"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

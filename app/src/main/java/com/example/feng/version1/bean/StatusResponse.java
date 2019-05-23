@@ -47,6 +47,7 @@ public class StatusResponse {
 
             private int meterId;
             private String meterName;
+            private double dataUpper,dataLower;
 
             public int getMeterId() {
                 return meterId;
@@ -62,6 +63,22 @@ public class StatusResponse {
 
             public void setMeterName(String meterName) {
                 this.meterName = meterName;
+            }
+
+            public double getDataUpper() {
+                return dataUpper;
+            }
+
+            public void setDataUpper(double dataUpper) {
+                this.dataUpper = dataUpper;
+            }
+
+            public double getDataLower() {
+                return dataLower;
+            }
+
+            public void setDataLower(double dataLower) {
+                this.dataLower = dataLower;
             }
         }
     }

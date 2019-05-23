@@ -11,6 +11,8 @@ public class Equipment {
     private String deviceId;
     private String task;
     private Long id;
+    private Double up,low;
+
 
     public Equipment(String deviceName, String meterName, String data, String time, String userName) {
         this.deviceName = deviceName;
@@ -129,4 +131,21 @@ public class Equipment {
     public void setTask(String task) {
         this.task = task;
     }
+
+    public Double getUp() {
+        return up;
+    }
+
+    public void setUp(Double up) {
+        this.up = up;
+    }
+
+    public Double getLow() {
+        return low;
+    }
+
+    public void setLow(Double low) {
+        this.low = low;
+    }
+
 }

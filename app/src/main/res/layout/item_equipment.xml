@@ -21,6 +21,32 @@
             android:textSize="18sp"
             android:text="仪表1"/>
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center">
+            <EditText
+                android:id="@+id/edit_item_low"
+                android:hint="下限"
+                android:layout_width="wrap_content"
+                android:maxLines="1"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:layout_toRightOf="@id/edit_item_low"
+                android:id="@+id/edit_item_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="numberDecimal"
+                android:singleLine="true"
+                android:hint="上限" />
+        </RelativeLayout>
+
+
+
 
     </android.support.v7.widget.CardView>
 

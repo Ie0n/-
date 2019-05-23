@@ -29,13 +29,15 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private EditText txtName;
+        private EditText txtName,up,low;
 
         public ViewHolder(@NonNull View itemView,OnItemListener listener) {
             super(itemView);
             onItemListener = listener;
             itemView.setOnClickListener(this);
             txtName = itemView.findViewById(R.id.text_item_equipment);
+            up = itemView.findViewById(R.id.edit_item_up);
+            low = itemView.findViewById(R.id.edit_item_low);
             txtName.setOnClickListener(this);
         }
 
@@ -62,7 +64,8 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
     @Override
     public void onBindViewHolder(@NonNull EquipmentAdapter.ViewHolder viewHolder, final int position) {
         viewHolder.txtName.setText(mData.get(position).getName());
-
+        viewHolder.low.setText(String.valueOf(mData.get(position).getLow()));
+        viewHolder.up.setText(String.valueOf(mData.get(position).getUp()));
     }
 
     @Override

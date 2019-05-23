@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -48,6 +49,7 @@ public class AllMeterActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private List<Meter> meterList;
+    private LinearLayout linearLayout;
     private Context mContext;
     private User user;
     private String deviceNo;
@@ -69,6 +71,7 @@ public class AllMeterActivity extends AppCompatActivity {
 
     private void initView(){
         recyclerView = findViewById(R.id.rv_meter_list);
+        linearLayout = findViewById(R.id.line_no_data);
         layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         meterList = new ArrayList<>();
@@ -107,9 +110,18 @@ public class AllMeterActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
+                    String result = response.body().string();
                     try {
-                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
+                        if (status == 1201){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setNoDataImg();
+                                }
+                            });
+                        }
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("meters");
@@ -196,6 +208,10 @@ public class AllMeterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setNoDataImg(){
+        linearLayout.setVisibility(View.VISIBLE);
     }
     private void deleteMeter(String id){
         HttpUrl.Builder builder = HttpUrl.parse(DELETE_URL).newBuilder();

@@ -52,7 +52,7 @@ public class AllDeviceActivity extends AppCompatActivity {
     private List<Equipment> deviceList;
     private User user;
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
-    private static final String DELETE_URL = PublicData.DOMAIN+"/api/user/deleteDevice";
+    private static final String DELETE_URL = PublicData.DOMAIN+"/api/admin/deleteDevice";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,12 +69,6 @@ public class AllDeviceActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         deviceList = new ArrayList<>();
         getData();
-    }
-
-    private String clearChar(String s) {
-        String replace = s.replace("\\", "");
-        String replace2 = replace.substring(1, replace.length() - 1);
-        return replace2;
     }
 
     @NonNull
@@ -195,7 +189,7 @@ public class AllDeviceActivity extends AppCompatActivity {
         mPopView.findViewById(R.id.tv_delete_txt).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteDevice(name,id);
+                deleteDevice(id);
                 if (mPopWindow != null) {
                     mPopWindow.dismiss();
                 }
@@ -203,11 +197,10 @@ public class AllDeviceActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteDevice(String deviceName,String id){
+    private void deleteDevice(String id){
         HttpUrl.Builder builder = HttpUrl.parse(DELETE_URL).newBuilder();
         builder
                 .addQueryParameter("userNo",String.valueOf(user.getuserNo()))
-                .addQueryParameter("deviceName",deviceName)
                 .addQueryParameter("deviceNo",id);
         Request request = new Request
                 .Builder()

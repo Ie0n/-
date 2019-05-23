@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.feng.version1.AllDeviceActivity;
+import com.example.feng.version1.ErrorDataActivity;
 import com.example.feng.version1.LoginActivity;
 import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
@@ -51,7 +52,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MyFragment extends Fragment implements View.OnClickListener {
 
-    private Button logout,manager,excel_out,btn_record_device;
+    private Button logout,manager,excel_out,btn_record_device,btn_error;
     private Context mContext;
     private User user;
     private TextView user_name_text,user_id_text;
@@ -153,8 +154,10 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         manager = view.findViewById(R.id.manager);
         excel_out = view.findViewById(R.id.btn_excel_out);
         btn_record_device = view.findViewById(R.id.btn_in_device);
+        btn_error = view.findViewById(R.id.btn_un_usual_data);
         user_name_text = view.findViewById(R.id.text_user_name);
         user_id_text = view.findViewById(R.id.text_user_id);
+        btn_error.setOnClickListener(this);
         logout.setOnClickListener(this);
         manager.setOnClickListener(this);
         excel_out.setOnClickListener(this);
@@ -181,6 +184,10 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btn_in_device:
                 startActivity(new Intent(mContext,AllDeviceActivity.class));
+                break;
+            case R.id.btn_un_usual_data:
+                startActivity(new Intent(mContext,ErrorDataActivity.class));
+                break;
         }
     }
 
@@ -212,7 +219,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
 
 
         ExcelUtil.writeObjListToExcel(demoBeanList, Environment.getExternalStorageDirectory().toString()+
-                File.separator +"DataExcel", result,mContext);
+                File.separator +"DataExcel", result,mContext,0);
 
     }
 

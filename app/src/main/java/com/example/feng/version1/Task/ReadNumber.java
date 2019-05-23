@@ -1,8 +1,10 @@
 package com.example.feng.version1.Task;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -48,8 +50,9 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
     private Button speechr;
     private Button textin;
     private EditText editxt;
-    private TextView tabTv, devTv, txtTv;
+    private TextView tabTv, devTv, txtTv,topTv,lowTv;
     private String result_speech, result_edit;
+    private String up,low;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +66,20 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         device = intent_task.getStringExtra("device");
         tab = intent_task.getStringExtra("tab");
         meterid = intent_task.getStringExtra("meterid");
+        up = intent_task.getStringExtra("up");
+        low = intent_task.getStringExtra("low");
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5c7b8620");
         findview();
+        topTv.setText(up);
+        lowTv.setText(low);
         devTv.setText(device);
         tabTv.setText(tab);
     }
 
     private void findview() {
+        topTv = findViewById(R.id.top);
+        lowTv = findViewById(R.id.low);
+
         devTv = findViewById(R.id.device_read);
         tabTv = findViewById(R.id.tab_read);
 
@@ -141,7 +151,12 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
                     result = result_edit;
                 }
                 try {
-                    updateResult(result);
+                    if (Double.parseDouble(result)>Double.parseDouble(topTv.getText().toString()) ||
+                            Double.parseDouble(result)<Double.parseDouble(lowTv.getText().toString())){
+                        showDialog(result);
+                    }else {
+                        updateResult(result);
+                    }
                 } catch (NumberFormatException e) {
                     Toast.makeText(this, "请输入数字", Toast.LENGTH_LONG).show();
                 }
@@ -204,6 +219,30 @@ public class ReadNumber extends AppCompatActivity implements View.OnClickListene
         public class CWBean {
             public String w;
         }
+    }
+
+    private void showDialog(final String result){
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setIcon(R.mipmap.icon)
+                .setTitle("提示")
+                .setMessage("当前数据异常，是否确定录入")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(ReadNumber.this, "已上传该数据", Toast.LENGTH_SHORT).show();
+                        updateResult(result);
+                        dialog.dismiss();
+                        ReadNumber.this.finish();
+                    }
+                }).create();
+        dialog.show();
     }
 
 }

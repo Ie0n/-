@@ -71,6 +71,8 @@
         <activity android:name=".AllDeviceActivity" />
         <activity android:name=".AllMeterActivity" />
         <activity android:name=".ChooseDeviceActivity" />
+        <activity android:name=".ErrorDataActivity" />
+        <activity android:name=".ChooseTaskInputActivity" />
 
     </application>
 

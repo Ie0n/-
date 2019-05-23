@@ -5,6 +5,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.feng.version1.bean.Equipment;
+import com.example.feng.version1.bean.ErrorEquipment;
+import com.example.feng.version1.bean.SiteTaskEquipment;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -96,7 +98,7 @@ public class ExcelUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> void writeObjListToExcel(List<T> objList, String fileName,String name, Context c) {
+    public static <T> void writeObjListToExcel(List<T> objList, String fileName,String name, Context c,int a) {
         if (objList != null && objList.size() > 0) {
             WritableWorkbook writebook = null;
             InputStream in = null;
@@ -108,29 +110,106 @@ public class ExcelUtil {
                 writebook = Workbook.createWorkbook(new File(fileName,name), workbook);
                 WritableSheet sheet = writebook.getSheet(0);
 
-                for (int j = 0; j < objList.size(); j++) {
-                    Equipment meter = (Equipment) objList.get(j);
-                    List<String> list = new ArrayList<>();
+                if (a == 0){
+                    for (int j = 0; j < objList.size(); j++) {
+                        Equipment meter = (Equipment) objList.get(j);
+                        List<String> list = new ArrayList<>();
 
-                    list.add(meter.getName());
-                    list.add(meter.getMeterName());
-                    list.add(meter.getTabNum());
-                    list.add(meter.getTime());
-                    list.add(meter.getUserName());
+                        list.add(meter.getName());
+                        list.add(meter.getMeterName());
+                        list.add(meter.getTabNum());
+                        list.add(meter.getTime());
+                        list.add(meter.getUserName());
 
-                    for (int i = 0; i < list.size(); i++) {
-                        sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
-                        if (list.get(i).length() <= 4) {
-                            sheet.setColumnView(i, list.get(i).length() + 8);
-                        } else {
-                            sheet.setColumnView(i, list.get(i).length() + 5);
+                        for (int i = 0; i < list.size(); i++) {
+                            sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
+                            if (list.get(i).length() <= 4) {
+                                sheet.setColumnView(i, list.get(i).length() + 8);
+                            } else {
+                                sheet.setColumnView(i, list.get(i).length() + 5);
+                            }
                         }
+                        sheet.setRowView(j + 1, 350);
                     }
-                    sheet.setRowView(j + 1, 350);
+                    writebook.write();
+                    Toast.makeText(c, "所有数据导出Excel成功", Toast.LENGTH_SHORT).show();
+                }
+                if (a == 1){
+                    for (int j = 0; j < objList.size(); j++) {
+                        ErrorEquipment meter = (ErrorEquipment) objList.get(j);
+                        List<String> list = new ArrayList<>();
+
+                        list.add(meter.getSite());
+                        list.add(meter.getDevice());
+                        list.add(meter.getTabId());
+                        list.add(meter.getTabNum());
+                        list.add(meter.getTime());
+                        list.add(meter.getUserName());
+
+                        for (int i = 0; i < list.size(); i++) {
+                            sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
+                            if (list.get(i).length() <= 4) {
+                                sheet.setColumnView(i, list.get(i).length() + 8);
+                            } else {
+                                sheet.setColumnView(i, list.get(i).length() + 5);
+                            }
+                        }
+                        sheet.setRowView(j + 1, 350);
+                    }
+                    writebook.write();
+                    Toast.makeText(c, "异常数据导出Excel成功", Toast.LENGTH_SHORT).show();
+                }
+                if (a == 2){
+                    for (int j = 0; j < objList.size(); j++) {
+                        SiteTaskEquipment meter = (SiteTaskEquipment) objList.get(j);
+                        List<String> list = new ArrayList<>();
+
+                        list.add(meter.getDeviceName());
+                        list.add(meter.getMeterName());
+                        list.add(meter.getData());
+                        list.add(meter.getTime());
+                        list.add(meter.getInPerson());
+
+                        for (int i = 0; i < list.size(); i++) {
+                            sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
+                            if (list.get(i).length() <= 4) {
+                                sheet.setColumnView(i, list.get(i).length() + 8);
+                            } else {
+                                sheet.setColumnView(i, list.get(i).length() + 5);
+                            }
+                        }
+                        sheet.setRowView(j + 1, 350);
+                    }
+                    writebook.write();
+                    Toast.makeText(c, "按站点任务导出Excel成功", Toast.LENGTH_SHORT).show();
+                }
+                if (a == 3){
+                    for (int j = 0; j < objList.size(); j++) {
+                        Equipment meter = (Equipment) objList.get(j);
+                        List<String> list = new ArrayList<>();
+
+                        list.add(meter.getSite());
+                        list.add(meter.gettabId());
+                        list.add(meter.getTabNum());
+                        list.add(meter.getTime());
+                        list.add(meter.getUserName());
+
+                        for (int i = 0; i < list.size(); i++) {
+                            sheet.addCell(new Label(i, j + 1, list.get(i), arial12format));
+                            if (list.get(i).length() <= 4) {
+                                sheet.setColumnView(i, list.get(i).length() + 8);
+                            } else {
+                                sheet.setColumnView(i, list.get(i).length() + 5);
+                            }
+                        }
+                        sheet.setRowView(j + 1, 350);
+                    }
+                    writebook.write();
+                    Toast.makeText(c, "按设备导出Excel成功", Toast.LENGTH_SHORT).show();
                 }
 
-                writebook.write();
-                Toast.makeText(c, "导出Excel成功", Toast.LENGTH_SHORT).show();
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

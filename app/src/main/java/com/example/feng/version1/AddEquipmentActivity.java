@@ -51,6 +51,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     private EditText driverName;
     private String deviceNo,site,task;
     private Device device = new Device();
+    private int isRight = 0;
     private String [] tabs= {
             "仪表一","仪表二","仪表三","仪表四","仪表五","仪表六","仪表七","仪表八"
     };
@@ -102,7 +103,6 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                 }else {
                     Toast.makeText(mContext,"已超过最多仪表数量",Toast.LENGTH_SHORT).show();
                 }
-
                 break;
             case R.id.confirm:
                 confirm();
@@ -119,7 +119,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             device.setDeviceName(text);
         }
         String cookies = PublicData.getCookie(mContext);
-        String url = PublicData.DOMAIN+"/api/user/addDevice";
+        String url = PublicData.DOMAIN+"/api/admin/addDevice";
         RequestBody requestBody = new FormBody.Builder()
                 .add("userNo",String.valueOf(User.getInstance().getuserNo()))
                 .add("deviceName", device.getDeviceName())
@@ -128,7 +128,6 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                 .add("task",task)
                 .build();
         HttpRequest.getInstance().post(url,requestBody,this,cookies);
-
     }
 
     @Override
@@ -144,9 +143,26 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             String body = (response.body().string());
             DeviceCreateResponse createResponse = gson.fromJson(body,DeviceCreateResponse.class);
             if (createResponse.getStatus() == 1200){
-                addMeters();
+                checkMeter();
+                if (isRight == 1){
+                    return;
+                }else {
+                    addMeters();
+                }
             }else if (createResponse.getStatus()== 1404) {
                 ToastUtil.ToastTextThread(mContext,createResponse.getStatusinfo().getMessage());
+            }
+        }
+    }
+
+    private void checkMeter(){
+        for (int i = 0; i < count; i++) {
+            View view = layoutManager.findViewByPosition(i);
+            EditText up = view.findViewById(R.id.edit_item_up);
+            EditText low = view.findViewById(R.id.edit_item_low);
+            if (Double.parseDouble(up.getText().toString())<Double.parseDouble(low.getText().toString())){
+                ToastUtil.ToastTextThread(mContext,"请检查上下限是否正确");
+                isRight = 1;
             }
         }
     }
@@ -161,11 +177,15 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                     for (int i = 0; i < count; i++) {
                         View view = layoutManager.findViewByPosition(i);
                         EditText editText = view.findViewById(R.id.text_item_equipment);
+                        EditText up = view.findViewById(R.id.edit_item_up);
+                        EditText low = view.findViewById(R.id.edit_item_low);
                         String name = editText.getText().toString();
                         RequestBody requestBody = new FormBody.Builder()
                                 .add("userNo", String.valueOf(User.getInstance().getuserNo()))
                                 .add("deviceNo", deviceNo)
                                 .add("meterName", name)
+                                .add("dataUpper",up.getText().toString())
+                                .add("dataLower",low.getText().toString())
                                 .build();
                         Response response = HttpRequest.getInstance().post(url, requestBody, cookie);
                         if (response.isSuccessful()) {
@@ -176,7 +196,6 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                                 ToastUtil.ToastTextThread(mContext,r.getStatusinfo().getMessage());
                             }else {
                                 ToastUtil.ToastTextThread(mContext,"添加仪表:"+name+"成功");
-
                             }
                         }
                     }

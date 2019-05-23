@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.feng.version1.AddEquipmentActivity;
 import com.example.feng.version1.ChooseDeviceActivity;
+import com.example.feng.version1.ChooseTaskInputActivity;
 import com.example.feng.version1.MessageEvent;
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.R;
@@ -52,16 +53,13 @@ import static com.example.feng.version1.Public.PublicData.content;
 public class TaskFragment extends Fragment implements View.OnClickListener {
 
     private Context mContext;
-    private TextView userid;
     private RelativeLayout add;
     private RelativeLayout input;
     private LinearLayout linearLayout;
 
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
-    private static final String DECODED_CONTENT_KEY = "codedContent";
     private ArrayList<String> deviceList,deviceNameList;
     private Intent intent;
-    private static final int REQUEST_CODE_INPUT = 0x0001;
 
     private User user;
 
@@ -84,6 +82,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         user = User.getInstance();
+        intent = new Intent();
     }
 
     @Nullable
@@ -92,6 +91,7 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
         initView(view);
         setVisible();
+        initData();
         return view;
     }
     private void initView(View view){
@@ -100,13 +100,11 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         add.setOnClickListener(this);
         input = view.findViewById(R.id.r2);
         input.setOnClickListener(this);
-        intent = new Intent();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
     }
 
     private void setVisible(){
@@ -116,6 +114,22 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.r2:
+                intent.setClass(mContext, ChooseDeviceActivity.class);
+                startActivity(intent);
+                break;
+
+            case R.id.r1:
+                Intent intent2 = new Intent(mContext, ChooseTaskInputActivity.class);
+                startActivity(intent2);
+                break;
+            default:
+                break;
+        }
+    }
     @NonNull
     private String getCookie() {
         SharedPreferences sp = getActivity().getSharedPreferences("Cookie", MODE_PRIVATE);
@@ -174,45 +188,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_INPUT && resultCode == RESULT_OK) {
-
-            if (data != null){
-                content = data.getStringExtra(DECODED_CONTENT_KEY);
-
-                if (deviceList.contains(content)){
-                    int i = deviceList.indexOf(content);
-                    Intent intent = new Intent();
-                    intent.putExtra("deviceNo",content);
-                    intent.putExtra("deviceName",deviceNameList.get(i));
-                    intent.setClass(mContext,SelectTabActivity.class);
-                    startActivity(intent);
-                }else {
-                    Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.r2:
-                intent.setClass(mContext, ChooseDeviceActivity.class);
-                startActivity(intent);
-                break;
-
-            case R.id.r1:
-                Intent intent2 = new Intent(mContext, CaptureActivity.class);
-                startActivityForResult(intent2, REQUEST_CODE_INPUT);
-                break;
-            default:
-                break;
-        }
-    }
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         deviceList.clear();
@@ -233,4 +208,12 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
             EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
+
+
+
+
+
+
+
+
 }

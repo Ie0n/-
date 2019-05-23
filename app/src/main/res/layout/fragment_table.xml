@@ -4,23 +4,252 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Spinner
-        android:layout_marginTop="100dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:id="@+id/spinner"
+    <android.support.v7.widget.CardView
+        android:id="@+id/line1"
         android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp">
+            <Spinner
+                android:layout_gravity="center"
+                android:id="@+id/spinner"
+                android:padding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
 
-    </Spinner>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
+                <Button
+                    android:id="@+id/btn_search_by_device"
+                    android:layout_gravity="center"
+                    android:text="查询"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_btn"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_below="@id/line1"
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:padding="10dp">
+            <Spinner
+                android:layout_gravity="center"
+                android:id="@+id/spinner_site"
+                android:padding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
+
+            <Spinner
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center"
+                android:id="@+id/spinner_task"
+                android:padding="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+            </Spinner>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right">
+                <Button
+                    android:id="@+id/btn_search_by_site"
+                    android:layout_gravity="center"
+                    android:text="查询"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_btn"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_below="@id/line2"
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:padding="10dp">
+                <Spinner
+                    android:layout_gravity="center"
+                    android:id="@+id/spinner_site2"
+                    android:padding="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Spinner>
+                <Spinner
+                    android:layout_gravity="center"
+                    android:id="@+id/spinner_device"
+                    android:layout_marginLeft="5dp"
+                    android:padding="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Spinner>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right">
+                    <Button
+                        android:id="@+id/btn_search_by_multi"
+                        android:layout_gravity="center"
+                        android:text="查询"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:textColor="@color/white"
+                        android:background="@drawable/shape_btn"
+                        android:textSize="16sp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
+                <Spinner
+                    android:layout_gravity="center"
+                    android:id="@+id/spinner_meter"
+                    android:padding="0dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Spinner>
+                <TextView
+                    android:text="20"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/edit_start_year"
+                    android:hint="20"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/edit_start_month"
+                    android:hint="04"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/edit_start_day"
+                    android:hint="04"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="~~"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="20"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/edit_end_year"
+                    android:hint="20"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/edit_end_month"
+                    android:hint="04"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="-"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/edit_end_day"
+                    android:hint="04"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+    <com.example.feng.version1.MyLineChart
+        android:visibility="gone"
+        android:layout_below="@id/line3"
+        android:id="@+id/line_chart"
+        android:layout_marginBottom="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp">
+    </com.example.feng.version1.MyLineChart>
 
     <com.bin.david.form.core.SmartTable
-        android:layout_below="@id/spinner"
+        android:layout_below="@id/line3"
         android:layout_marginTop="38dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="50dp"
         android:layout_marginRight="15dp"
         android:id="@+id/table"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/btn_output_data"
+        android:layout_marginBottom="50dp"
+        android:layout_marginRight="250dp"
+        android:layout_below="@id/btn_in_device"
+        android:background="@android:color/transparent"
+        android:text="导出数据"
+        android:textColor="@color/black"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
