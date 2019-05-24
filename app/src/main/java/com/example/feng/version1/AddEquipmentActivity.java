@@ -186,6 +186,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                                 .add("meterName", name)
                                 .add("dataUpper",up.getText().toString())
                                 .add("dataLower",low.getText().toString())
+                                .add("task",task)
                                 .build();
                         Response response = HttpRequest.getInstance().post(url, requestBody, cookie);
                         if (response.isSuccessful()) {

@@ -17,7 +17,7 @@
         android:layout_height="43dp"
         android:singleLine="true"
         android:hint="账号"
-        android:inputType="text"
+        android:inputType="number"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="230dp"
         android:textColor="@color/white"

@@ -41,7 +41,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     private List<StatusResponse.DataBean.MetersBean> meters;
     private MetersAdapter adapter;
     private FloatingActionButton confirm;
-    private String deviceName,deviceNo;
+    private String deviceName,deviceNo,task;
     private TextView deviceTv;
 
     @Override
@@ -56,6 +56,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
         Intent intent_task = getIntent();
         deviceName = intent_task.getStringExtra("deviceName");
         deviceNo = intent_task.getStringExtra("deviceNo");
+        task = intent_task.getStringExtra("task");
         initView();
     }
     private void initView(){
@@ -85,7 +86,7 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
         recyclerView.setAdapter(adapter);
     }
     private void initData(){
-        String url = PublicData.DOMAIN+"/api/user/getDeviceMeters?userNo="+User.getInstance().getuserNo()+"&deviceNo="+deviceNo;
+        String url = PublicData.DOMAIN+"/api/user/getDeviceMetersA?userNo="+User.getInstance().getuserNo()+"&deviceNo="+deviceNo+"&task="+task;
         HttpRequest.getInstance().get(url,this,PublicData.getCookie(mContext));
     }
 

@@ -54,7 +54,7 @@ public class AllMeterActivity extends AppCompatActivity {
     private User user;
     private String deviceNo;
     private MeterAdapter adapter;
-    private static final String URL = PublicData.DOMAIN+"/api/user/getDeviceMeters";
+    private static final String URL = PublicData.DOMAIN+"/api/user/getDeviceMetersB";
     private static final String DELETE_URL = PublicData.DOMAIN+"/api/user/deleteMeter";
 
     @Override

@@ -2,11 +2,13 @@ package com.example.feng.version1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +20,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.bean.User;
 import com.yzq.testzxing.zxing.android.CaptureActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static com.example.feng.version1.Public.PublicData.content;
 
@@ -43,6 +57,8 @@ public class ChooseDeviceActivity extends AppCompatActivity{
     private static final String  DECODED_CONTENT_KEY = "codedContent";
     private ArrayList<String> deviceList,deviceNameList;
     private String site,task;
+
+    private static final String URL_EXIT = PublicData.DOMAIN+"/api/admin/existDevice";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,6 +119,7 @@ public class ChooseDeviceActivity extends AppCompatActivity{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 task = taskList.get(position);
+
             }
 
             @Override
@@ -129,18 +146,67 @@ public class ChooseDeviceActivity extends AppCompatActivity{
         if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK){
             if (data != null){
                 content = data.getStringExtra(DECODED_CONTENT_KEY);
-                if (deviceList.contains(content)){
-                    ToastUtil.ToastTextThread(mContext,"该设备已录入");
-                }else {
-                    Intent intent = new Intent();
-                    intent.putExtra("deviceNo",content);
-                    intent.putExtra("site",site);
-                    intent.putExtra("task",task);
-                    intent.setClass(mContext,AddEquipmentActivity.class);
-                    startActivity(intent);
-                }
+                isExit(content,task);
             }
         }
+    }
+
+    @NonNull
+    private String getCookie() {
+        SharedPreferences sp = getSharedPreferences("Cookie", MODE_PRIVATE);
+        return sp.getString("token", "access_token")
+                .concat("=")
+                .concat(sp.getString("token_value", "null"))
+                .concat(";");
+    }
+
+    private void isExit(String id,final String task){
+        HttpUrl.Builder builder = HttpUrl.parse(URL_EXIT).newBuilder();
+        builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("deviceNo",id)
+                .addQueryParameter("task",task);
+        Request request = new Request
+                .Builder()
+                .url(builder.build())
+                .get()
+                .header("Cookie", getCookie())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+
+                    String result = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        Log.d("ddddddd",task);
+                        int status = jsonObject.getInt("status");
+                        if (status == 1200){
+                            //存在
+                            ToastUtil.ToastTextThread(mContext,"该设备已录入");
+                        }else if (status == 1201){
+                            //不存在
+                            Intent intent = new Intent();
+                            intent.putExtra("deviceNo",content);
+                            intent.putExtra("site",site);
+                            intent.putExtra("task",task);
+                            intent.setClass(mContext,AddEquipmentActivity.class);
+                            startActivity(intent);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     class Myadapter<T> extends ArrayAdapter {

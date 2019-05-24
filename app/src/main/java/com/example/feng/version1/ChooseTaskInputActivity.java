@@ -62,9 +62,12 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
     private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
     private static final String URL2 = PublicData.DOMAIN.concat("/api/user/getDevicesByTask");
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
+    private static final String URL_DT = PublicData.DOMAIN+"/api/user/getDeviceByNoAndTask";
+    private static final String URL_EXIT = PublicData.DOMAIN+"/api/admin/existDevice";
     private static final String DECODED_CONTENT_KEY = "codedContent";
     private ArrayList<String> deviceList,deviceNameList;
     private static final int REQUEST_CODE_INPUT = 0x0001;
+    private String selectTask;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +88,12 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
         input.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent2 = new Intent(mContext,CaptureActivity.class);
-                startActivityForResult(intent2, REQUEST_CODE_INPUT);
+                if (list.size() == 0){
+                    Toast.makeText(mContext, "当前任务下没有设备需要录入", Toast.LENGTH_SHORT).show();
+                }else {
+                    Intent intent2 = new Intent(mContext,CaptureActivity.class);
+                    startActivityForResult(intent2, REQUEST_CODE_INPUT);
+                }
             }
         });
         initSpinner();
@@ -108,9 +115,10 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //发送提交数据查询的请求
                 //传进来的position 作为numlist的index
+                list.clear();
+                selectTask = taskList.get(position);
                 getData(taskList.get(position));
-                adapter = new DeviceInputAdapter(mContext,list);
-                recyclerView.setAdapter(adapter);
+
             }
 
             @Override
@@ -152,7 +160,6 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
-
                     String result = response.body().string();
                     try {
                         JSONObject jsonObject = new JSONObject(result);
@@ -168,6 +175,13 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
                                         jsonObject2.optString("meterNum")
                                 ));
                             }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    adapter = new DeviceInputAdapter(mContext,list);
+                                    recyclerView.setAdapter(adapter);
+                                }
+                            });
 
                         }else if (status == 1404 || status == 1201){
                             ToastUtil.ToastTextThread(mContext,"当前设备没有仪表信息");
@@ -191,20 +205,107 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
 
             if (data != null){
                 content = data.getStringExtra(DECODED_CONTENT_KEY);
-
-                if (deviceList.contains(content)){
-                    int i = deviceList.indexOf(content);
-                    Intent intent = new Intent();
-                    intent.putExtra("deviceNo",content);
-                    intent.putExtra("deviceName",deviceNameList.get(i));
-                    intent.setClass(mContext,SelectTabActivity.class);
-                    startActivity(intent);
-                }else {
-                    Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
-                }
+                isExit(content,selectTask);
             }
         }
     }
+
+    private void isExit(final String id, final String task){
+        HttpUrl.Builder builder = HttpUrl.parse(URL_EXIT).newBuilder();
+        builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("deviceNo",id)
+                .addQueryParameter("task",task);
+        Request request = new Request
+                .Builder()
+                .url(builder.build())
+                .get()
+                .header("Cookie", getCookie())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+
+                    String result = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        int status = jsonObject.getInt("status");
+                        if (status == 1200){
+                            //存在
+                            getData(id,task);
+
+                        }else if (status == 1201){
+                            //不存在
+                            Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+    private void getData(String deviceId,String task){
+        HttpUrl.Builder builder = HttpUrl.parse(URL_DT).newBuilder();
+        builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("deviceNo",deviceId)
+                .addQueryParameter("task",task);
+        Request request = new Request
+                .Builder()
+                .url(builder.build())
+                .get()
+                .header("Cookie", getCookie())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+                    String result = response.body().string();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        int status = jsonObject.getInt("status");
+                        if (status == 1200){
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            String deviceNo = data.getString("deviceNo");
+                            String deviceName = data.getString("deviceName");
+                            String task = data.getString("task");
+                            Intent intent = new Intent();
+                            intent.putExtra("deviceNo",deviceNo);
+                            intent.putExtra("deviceName",deviceName);
+                            intent.putExtra("task",task);
+                            intent.setClass(mContext,SelectTabActivity.class);
+                            startActivity(intent);
+                        }else if (status == 1404 || status == 1201){
+                            ToastUtil.ToastTextThread(mContext,"当前设备没有仪表信息");
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+
     class Myadapter<T> extends ArrayAdapter {
         public Myadapter(@NonNull Context context, int resource, @NonNull List<T> objects) {
             super(context, resource, objects);

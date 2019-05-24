@@ -111,7 +111,7 @@
                 </Spinner>
                 <Spinner
                     android:layout_gravity="center"
-                    android:id="@+id/spinner_device"
+                    android:id="@+id/spinner_meter"
                     android:layout_marginLeft="5dp"
                     android:padding="0dp"
                     android:layout_width="wrap_content"
@@ -138,13 +138,6 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp">
-                <Spinner
-                    android:layout_gravity="center"
-                    android:id="@+id/spinner_meter"
-                    android:padding="0dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                </Spinner>
                 <TextView
                     android:text="20"
                     android:textSize="16sp"
@@ -152,8 +145,10 @@
                     android:layout_height="wrap_content" />
                 <EditText
                     android:id="@+id/edit_start_year"
-                    android:hint="20"
+                    android:hint="19"
                     android:textSize="16sp"
+                    android:singleLine="true"
+                    android:inputType="number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
@@ -164,6 +159,8 @@
                 <EditText
                     android:id="@+id/edit_start_month"
                     android:hint="04"
+                    android:singleLine="true"
+                    android:inputType="number"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -175,6 +172,8 @@
                 <EditText
                     android:id="@+id/edit_start_day"
                     android:hint="04"
+                    android:singleLine="true"
+                    android:inputType="number"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -190,6 +189,8 @@
                 <EditText
                     android:id="@+id/edit_end_year"
                     android:hint="20"
+                    android:singleLine="true"
+                    android:inputType="number"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -201,6 +202,8 @@
                 <EditText
                     android:id="@+id/edit_end_month"
                     android:hint="04"
+                    android:singleLine="true"
+                    android:inputType="number"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -212,6 +215,8 @@
                 <EditText
                     android:id="@+id/edit_end_day"
                     android:hint="04"
+                    android:singleLine="true"
+                    android:inputType="number"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
@@ -231,7 +236,7 @@
 
     <com.bin.david.form.core.SmartTable
         android:layout_below="@id/line3"
-        android:layout_marginTop="38dp"
+        android:layout_marginTop="18dp"
         android:layout_marginLeft="15dp"
         android:layout_marginBottom="50dp"
         android:layout_marginRight="15dp"

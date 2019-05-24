@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -56,8 +57,10 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -68,12 +71,12 @@ import okhttp3.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class TableFragment extends Fragment implements View.OnClickListener {
+public class TableFragment extends Fragment implements View.OnClickListener{
 
     private Context mContext;
     private SmartTable table;
     private Spinner spinner,spinnerSite,spinnerTask,spinnerSite2,spinnerDevice,spinnerMeter;
-    private Myadapter arr_adapter,siteAdapter,taskAdapter;
+    private Myadapter arr_adapter,siteAdapter,taskAdapter,metersAdapter;
     private EditText start_year,start_month,start_day,end_year,end_month,end_day;
     private Button search_by_device,searchBySite,print,search_by_multi;
     private String selectDevice,selectSite,selectTask,selectSite2,selectTask2,selectMeter;
@@ -81,9 +84,13 @@ public class TableFragment extends Fragment implements View.OnClickListener {
     private static final String METER_URL = PublicData.DOMAIN+"/api/user/getDataByDevice";
     private static final String LINE_URL = PublicData.DOMAIN+"/api/user/getMeterData";
     private static final String LOC_URL = PublicData.DOMAIN+"/api/user/getDataBySiteAndTask";
+    private static final String METERS_URL = PublicData.DOMAIN+"/api/user/getMeterBySite";
     private List<String> deviceNameList,siteList,taskList,meterList;
+    private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
+    private static final String [] SITELIST = {"站点一","站点二","站点三"};
     private List<String> deviceIdList;
-    private List<lineChartBean> list;
+    private List<lineChartBean> list = new ArrayList<>();
+
     private User user;
 
     private MyLineChart lineChart;
@@ -95,6 +102,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
 
     List<Equipment> MeterList = new ArrayList<>();
     List<SiteTaskEquipment> locList = new ArrayList<>();
+
 
     public static TableFragment newInstance() {
 
@@ -116,17 +124,19 @@ public class TableFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_table, container, false);
         initView(view);
-        initChart(lineChart);
         initListener();
-        list = new ArrayList<>();
-        showLineChart(list, "仪表数据", Color.CYAN);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        siteList = new ArrayList<>();
+        taskList = new ArrayList<>();
+        siteList.addAll(Arrays.asList(SITELIST));
+        taskList.addAll(Arrays.asList(TASKLIST));
         getData();
+        meterList = new ArrayList<>();
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -167,17 +177,11 @@ public class TableFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectSite2 = siteList.get(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        spinnerDevice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectDevice = deviceNameList.get(position);
+                if (selectSite2.equals("选择站点")){
+                    return;
+                }
+                meterList.clear();
+                getMeters(selectSite2);
             }
 
             @Override
@@ -198,6 +202,64 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    private void getMeters(String site){
+        HttpUrl.Builder builder = HttpUrl.parse(METERS_URL).newBuilder();
+        builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("site",site);
+        final Request request = new Request
+                .Builder()
+                .url(builder.build())
+                .get()
+                .header("Cookie", getCookie())
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+                    String result = response.body().string();
+
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        int status = jsonObject.getInt("status");
+                        if (status == 1200){
+                            JSONObject data = jsonObject.getJSONObject("data");
+                            JSONArray array = data.getJSONArray("meters");
+
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject jsonObject2 = (JSONObject)array.get(i);
+                                meterList.add(jsonObject2.optString("meterName"));
+                            }
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    meterList.add("选择仪表");
+                                    metersAdapter = new Myadapter(mContext,android.R.layout.simple_spinner_item, meterList);
+                                    //设置样式
+                                    metersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    spinnerMeter.setAdapter(metersAdapter);
+                                    spinnerMeter.setSelection(meterList.size()-1,true);
+                                }
+                            });
+
+                        }else if (status == 1404 || status == 1201){
+                            ToastUtil.ToastTextThread(mContext,"没有数据/参数错误");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
     @NonNull
     private String getCookie() {
         SharedPreferences sp = getActivity().getSharedPreferences("Cookie", MODE_PRIVATE);
@@ -210,8 +272,6 @@ public class TableFragment extends Fragment implements View.OnClickListener {
     private void getData(){
         deviceNameList = new ArrayList<>();
         deviceIdList = new ArrayList<>();
-        siteList = new ArrayList<>();
-        taskList = new ArrayList<>();
         user = User.getInstance();
         HttpUrl.Builder builder = HttpUrl.parse(DEVICE_URL).newBuilder();
         builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()));
@@ -243,8 +303,6 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 deviceNameList.add(jsonObject2.optString("deviceName"));
                                 deviceIdList.add(jsonObject2.optString("deviceNo"));
-                                taskList.add(jsonObject2.optString("task"));
-                                siteList.add(jsonObject2.optString("site"));
                             }
                             deviceIdList.add("1");
                             deviceNameList.add("选择查看设备");
@@ -262,9 +320,12 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                                     taskAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     siteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     //加载适配器
+                                    spinnerSite2.setAdapter(siteAdapter);
+
                                     spinner.setAdapter(arr_adapter);
                                     spinnerTask.setAdapter(taskAdapter);
                                     spinnerSite.setAdapter(siteAdapter);
+                                    spinnerSite2.setSelection(siteList.size()-1,true);
                                     spinnerTask.setSelection(taskList.size()-1,true);
                                     spinnerSite.setSelection(siteList.size()-1,true);
                                     spinner.setSelection(deviceNameList.size()-1,true);
@@ -289,7 +350,6 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         print = view.findViewById(R.id. btn_output_data);
         spinner = view.findViewById(R.id.spinner);
         spinnerSite2 = view.findViewById(R.id.spinner_site2);
-        spinnerDevice = view.findViewById(R.id.spinner_device);
         spinnerMeter = view.findViewById(R.id.spinner_meter);
         spinnerSite = view.findViewById(R.id.spinner_site);
         spinnerTask = view.findViewById(R.id.spinner_task);
@@ -357,6 +417,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    table.setVisibility(View.VISIBLE);
                                     print.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -388,26 +449,24 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         return "20".concat(start_year.getText().toString()).concat("-")
                 .concat(start_month.getText().toString().concat("-"))
                 .concat(start_day.getText().toString())
-                .concat("00:00:01");
+                .concat(" 00:00:01");
     }
 
     private String getEndTime(){
         return "20".concat(end_year.getText().toString()).concat("-")
                 .concat(end_month.getText().toString().concat("-"))
                 .concat(end_day.getText().toString())
-                .concat("23:59:59");
+                .concat(" 23:59:59");
     }
 
     private void getLineChartData(){
-        list = new ArrayList<>();
         HttpUrl.Builder builder = HttpUrl.parse(LINE_URL).newBuilder();
         builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
                 .addQueryParameter("site",selectSite2)
-                .addQueryParameter("deviceName",selectDevice)
                 .addQueryParameter("meterName",selectMeter)
                 .addQueryParameter("beginTime",getBeginTime())
                 .addQueryParameter("endTime",getEndTime());
-        Request request = new Request
+        final Request request = new Request
                 .Builder()
                 .url(builder.build())
                 .get()
@@ -427,19 +486,29 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
+                    Log.d("dddddddddd",result);
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             JSONObject data = jsonObject.getJSONObject("data");
-                            JSONArray array = data.getJSONArray("metersData");
+                            JSONArray array = data.getJSONArray("resultData");
+                            list.clear();
 
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 list.add(new lineChartBean(jsonObject2.getString("entryTime"),
                                         Double.parseDouble(jsonObject2.getString("data"))));
                             }
-
+                            if (list.size() != 0){
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        initChart(lineChart,list);
+                                        showLineChart(list, "仪表数据", Color.CYAN);
+                                    }
+                                });
+                            }
                         }else if (status == 1404 || status == 1201){
                             ToastUtil.ToastTextThread(mContext,"当前没有信息");
                         }
@@ -514,7 +583,14 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                     Toast.makeText(mContext, "请先选择查询条件", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (TextUtils.isEmpty(start_year.getText()) ||TextUtils.isEmpty(start_month.getText())||
+                        TextUtils.isEmpty(start_day.getText())||TextUtils.isEmpty(end_year.getText())||
+                        TextUtils.isEmpty(end_month.getText())||TextUtils.isEmpty(end_day.getText())){
+                    Toast.makeText(mContext, "请完整输入查询日期", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 getLineChartData();
+                print.setVisibility(View.GONE);
                 table.setVisibility(View.GONE);
                 lineChart.setVisibility(View.VISIBLE);
 
@@ -565,6 +641,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    table.setVisibility(View.VISIBLE);
                                     print.setVisibility(View.VISIBLE);
                                 }
                             });
@@ -669,7 +746,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    private void initChart(MyLineChart lineChart) {
+    private void initChart(MyLineChart lineChart, final List<lineChartBean>list1) {
         /***图表设置***/
         //是否展示网格线
         lineChart.setDrawGridBackground(false);
@@ -708,7 +785,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                String tradeDate = list.get((int) value % list.size()).getDate();
+                String tradeDate = list1.get((int) value % list1.size()).getDate();
                 return formatDate(tradeDate);
             }
         });
@@ -765,7 +842,7 @@ public class TableFragment extends Fragment implements View.OnClickListener {
     }
 
     public static String formatDate(String str) {
-        SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat sf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat sf2 = new SimpleDateFormat("MM-dd");
         String formatStr = "";
         try {
