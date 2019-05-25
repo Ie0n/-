@@ -144,7 +144,7 @@ public class AllDeviceActivity extends AppCompatActivity {
                                 }
                             });
                         }else if (status == 1404){
-                            ToastUtil.ToastTextThread(mContext,"账号不合法或该账户不存在");
+                            ToastUtil.ToastTextThread(mContext,"当前暂时没有设备信息");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

@@ -65,7 +65,8 @@
         <activity android:name=".AddEquipmentActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".Task.SelectTabActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".UserActivity" />
         <activity android:name=".EditUserInfoActivity" />
         <activity android:name=".AllDeviceActivity" />

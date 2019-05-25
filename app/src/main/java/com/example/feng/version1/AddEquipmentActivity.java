@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
+import com.example.feng.version1.Util.SoftHideKeyBoardUtil;
 import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.EquipmentAdapter;
 import com.example.feng.version1.bean.Device;
@@ -60,6 +61,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_equipment);
+        SoftHideKeyBoardUtil.assistActivity(this);
         mContext = this;
         Intent intent = getIntent();
         deviceNo = intent.getStringExtra("deviceNo");
@@ -118,6 +120,10 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         }else {
             device.setDeviceName(text);
         }
+        checkMeter();
+        if (isRight == 1){
+            return;
+        }
         String cookies = PublicData.getCookie(mContext);
         String url = PublicData.DOMAIN+"/api/admin/addDevice";
         RequestBody requestBody = new FormBody.Builder()
@@ -143,12 +149,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             String body = (response.body().string());
             DeviceCreateResponse createResponse = gson.fromJson(body,DeviceCreateResponse.class);
             if (createResponse.getStatus() == 1200){
-                checkMeter();
-                if (isRight == 1){
-                    return;
-                }else {
-                    addMeters();
-                }
+                addMeters();
             }else if (createResponse.getStatus()== 1404) {
                 ToastUtil.ToastTextThread(mContext,createResponse.getStatusinfo().getMessage());
             }
@@ -160,10 +161,50 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
             View view = layoutManager.findViewByPosition(i);
             EditText up = view.findViewById(R.id.edit_item_up);
             EditText low = view.findViewById(R.id.edit_item_low);
+            String a = up.getText().toString();
+            String b = low.getText().toString();
+            if (!isNumber(a)||!isNumber(b)){
+                ToastUtil.ToastTextThread(mContext,"请输入数字");
+                isRight = 1;
+                return;
+            }
             if (Double.parseDouble(up.getText().toString())<Double.parseDouble(low.getText().toString())){
                 ToastUtil.ToastTextThread(mContext,"请检查上下限是否正确");
                 isRight = 1;
+                return;
             }
+            if ((isNumber(a) && isNumber(b) )&&(Double.parseDouble(up.getText().toString()) > Double.parseDouble(low.getText().toString()))){
+                isRight = 0;
+            }
+        }
+    }
+
+    public static boolean isNumber(String value) {
+        return isInteger(value) || isDouble(value);
+    }
+    /**
+     * 判断字符串是否是整数
+     */
+    public static boolean isInteger(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    /**
+     * 判断字符串是否是浮点数
+     */
+    public static boolean isDouble(String value) {
+        try {
+            Double.parseDouble(value);
+            if (value.contains("."))
+                return true;
+            return false;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 
@@ -171,7 +212,7 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
         Runnable runnable = new Runnable(){
             @Override
             public void run() {
-                String url = PublicData.DOMAIN + "/api/user/addMeter";
+                String url = PublicData.DOMAIN + "/api/admin/addMeter";
                 String cookie = PublicData.getCookie(mContext);
                 try {
                     for (int i = 0; i < count; i++) {
@@ -180,17 +221,20 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
                         EditText up = view.findViewById(R.id.edit_item_up);
                         EditText low = view.findViewById(R.id.edit_item_low);
                         String name = editText.getText().toString();
+                        String upper = up.getText().toString();
+                        String lower = low.getText().toString();
                         RequestBody requestBody = new FormBody.Builder()
                                 .add("userNo", String.valueOf(User.getInstance().getuserNo()))
                                 .add("deviceNo", deviceNo)
                                 .add("meterName", name)
-                                .add("dataUpper",up.getText().toString())
-                                .add("dataLower",low.getText().toString())
+                                .add("dataUpper",upper)
+                                .add("dataLower",lower)
                                 .add("task",task)
                                 .build();
                         Response response = HttpRequest.getInstance().post(url, requestBody, cookie);
                         if (response.isSuccessful()) {
                             String body = (response.body().string());
+                            Log.d("body: ",body);
                             Gson gson = new GsonBuilder().create();
                             StatusResponse r = gson.fromJson(body,StatusResponse.class);
                             if (r.getStatus() != 1200){

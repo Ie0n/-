@@ -111,6 +111,7 @@ public class AllMeterActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
                     String result = response.body().string();
+                    Log.d("ddddddd",result);
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");

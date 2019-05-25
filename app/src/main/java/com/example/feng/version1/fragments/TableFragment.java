@@ -486,7 +486,6 @@ public class TableFragment extends Fragment implements View.OnClickListener{
                 if (response.body() != null && response.isSuccessful()) {
 
                     String result = response.body().string();
-                    Log.d("dddddddddd",result);
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
