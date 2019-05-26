@@ -13,34 +13,38 @@
         android:layout_height="match_parent"
         >
         <LinearLayout
-            android:id="@+id/line_site"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="10dp">
-            <TextView
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="站点："/>
-
-            <TextView
-                android:id="@+id/txt_site_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="西南"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/line_device"
             android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_margin="10dp"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentRight="true"
+           >
+            <TextView
+                android:layout_width="wrap_content"
+                android:maxLines="1"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="仪表数量："/>
+
+            <TextView
+                android:id="@+id/txt_meter_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="3"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/line_device"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:maxLines="1"
@@ -56,27 +60,7 @@
                 android:text="设备一"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_below="@id/line_site">
-            <TextView
-                android:layout_width="wrap_content"
-                android:maxLines="1"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="仪表数量："/>
 
-            <TextView
-                android:id="@+id/txt_meter_num"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="3"/>
-        </LinearLayout>
 
     </RelativeLayout>
 

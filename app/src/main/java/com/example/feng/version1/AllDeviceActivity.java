@@ -17,8 +17,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.feng.version1.Public.PublicData;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -51,8 +55,13 @@ public class AllDeviceActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private List<Equipment> deviceList;
     private User user;
-    private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
+    private Spinner spinner;
+    private Myadapter arr_adapter;
+    private String selectDevice;
+    private static final String URL = PublicData.DOMAIN+"/api/user/getDevicesByTask";
     private static final String DELETE_URL = PublicData.DOMAIN+"/api/admin/deleteDevice";
+    private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
+    private List<String> taskList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,12 +73,46 @@ public class AllDeviceActivity extends AppCompatActivity {
         initView();
     }
     private void initView(){
+        taskList = new ArrayList<>();
         recyclerView = findViewById(R.id.rv_device_list);
+        spinner = findViewById(R.id.spinner_task_search);
+        taskList.addAll(Arrays.asList(TASKLIST));
+        taskList.add("选择任务");
+        arr_adapter = new Myadapter(mContext, android.R.layout.simple_spinner_item, taskList);
+        arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setSelection(taskList.size()-1,true);
+        spinner.setAdapter(arr_adapter);
+
         layoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(layoutManager);
         deviceList = new ArrayList<>();
-        getData();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                deviceList.clear();
+                getData(taskList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
+    class Myadapter<T> extends ArrayAdapter {
+        public Myadapter(@NonNull Context context, int resource, @NonNull List<T> objects) {
+            super(context, resource, objects);
+        }
+
+        @Override
+        public int getCount() {
+            int i = super.getCount();
+            return i>0?i-1:i;
+        }
+    }
+
 
     @NonNull
     private String getCookie() {
@@ -80,9 +123,11 @@ public class AllDeviceActivity extends AppCompatActivity {
                 .concat(";");
     }
 
-    private void getData(){
+
+    private void getData(final String task){
         HttpUrl.Builder builder = HttpUrl.parse(URL).newBuilder();
-        builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()));
+        builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
+                .addQueryParameter("task",task);
         Request request = new Request
                 .Builder()
                 .url(builder.build())
@@ -124,6 +169,7 @@ public class AllDeviceActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+
                                     adapter = new DeviceAdapter(mContext,deviceList);
                                     adapter.setOnItemLongClickListener(new DeviceAdapter.onItemLongClickListener() {
                                         @Override
@@ -136,11 +182,13 @@ public class AllDeviceActivity extends AppCompatActivity {
                                         public void onItemClick(View view, int position) {
                                             Intent intent = new Intent();
                                             intent.setClass(mContext,AllMeterActivity.class);
+                                            intent.putExtra("task",task);
                                             intent.putExtra("deviceNo",deviceNoList.get(position));
                                             startActivity(intent);
                                         }
                                     });
                                     recyclerView.setAdapter(adapter);
+
                                 }
                             });
                         }else if (status == 1404){
@@ -226,7 +274,7 @@ public class AllDeviceActivity extends AppCompatActivity {
                         if (status == 1200){
                             ToastUtil.ToastTextThread(AllDeviceActivity.this,"设备删除成功");
                             deviceList.clear();
-                            getData();
+                            getData(selectDevice);
                             EventBus.getDefault().post(new MessageEvent());
                         }else if (status == 1404){
                             ToastUtil.ToastTextThread(AllDeviceActivity.this,"账号不合法或该账户不存在");

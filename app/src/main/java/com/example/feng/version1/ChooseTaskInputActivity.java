@@ -54,12 +54,13 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private DeviceInputAdapter adapter;
     private List<DeviceReadyInput>list;
-    private Spinner spinner;
-    private Myadapter arr_adapter;
-    private List<String> taskList;
+    private Spinner spinner,siteSpinner;
+    private Myadapter arr_adapter,siteAdapter;
+    private List<String> taskList,siteList;
     private User user;
     private Button input;
     private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
+    private static final String [] SITELIST = {"站点一","站点二","站点三"};
     private static final String URL2 = PublicData.DOMAIN.concat("/api/user/getDevicesByTask");
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
     private static final String URL_DT = PublicData.DOMAIN+"/api/user/getDeviceByNoAndTask";
@@ -82,6 +83,7 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
     private void initView(){
         list = new ArrayList<>();
         input = findViewById(R.id.btn_start_rec);
+        siteSpinner = findViewById(R.id.spinner_site_input);
         spinner = findViewById(R.id.spinner_task_input);
         recyclerView = findViewById(R.id.rv_device_input_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
@@ -102,13 +104,20 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
 
     private void initSpinner(){
         taskList = new ArrayList<>();
+        siteList = new ArrayList<>();
+        siteList.addAll(Arrays.asList(SITELIST));
         taskList.addAll(Arrays.asList(TASKLIST));
+        siteList.add("选择站点");
         taskList.add("选择任务");
+        siteAdapter = new Myadapter(mContext, android.R.layout.simple_spinner_item, siteList);
         arr_adapter= new Myadapter(mContext, android.R.layout.simple_spinner_item, taskList);
         //设置样式
         arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        siteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //加载适配器
         spinner.setAdapter(arr_adapter);
+        siteSpinner.setAdapter(siteAdapter);
+        siteSpinner.setSelection(siteList.size() - 1,true);
         spinner.setSelection(taskList.size()-1,true);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -244,7 +253,7 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
 
                         }else if (status == 1201){
                             //不存在
-                            Toast.makeText(mContext, "请先录入该设备", Toast.LENGTH_SHORT).show();
+                            ToastUtil.ToastTextThread(mContext,"请先录入该设备");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

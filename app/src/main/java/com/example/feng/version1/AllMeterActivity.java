@@ -52,10 +52,10 @@ public class AllMeterActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     private Context mContext;
     private User user;
-    private String deviceNo;
+    private String deviceNo,task;
     private MeterAdapter adapter;
-    private static final String URL = PublicData.DOMAIN+"/api/user/getDeviceMetersB";
-    private static final String DELETE_URL = PublicData.DOMAIN+"/api/user/deleteMeter";
+    private static final String URL = PublicData.DOMAIN+"/api/user/getDeviceMetersA";
+    private static final String DELETE_URL = PublicData.DOMAIN+"/api/admin/deleteMeter";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +66,7 @@ public class AllMeterActivity extends AppCompatActivity {
         user = User.getInstance();
         Intent intent = getIntent();
         deviceNo = intent.getStringExtra("deviceNo");
+        task = intent.getStringExtra("task");
         initView();
     }
 
@@ -91,7 +92,8 @@ public class AllMeterActivity extends AppCompatActivity {
         HttpUrl.Builder builder = HttpUrl.parse(URL).newBuilder();
         builder
                 .addQueryParameter("userNo",String.valueOf(user.getuserNo()))
-                .addQueryParameter("deviceNo",deviceNo);
+                .addQueryParameter("deviceNo",deviceNo)
+                .addQueryParameter("task",task);
         Request request = new Request
                 .Builder()
                 .url(builder.build())
@@ -111,7 +113,6 @@ public class AllMeterActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
                     String result = response.body().string();
-                    Log.d("ddddddd",result);
                     try {
                         JSONObject jsonObject = new JSONObject(result);
                         int status = jsonObject.getInt("status");
@@ -241,7 +242,7 @@ public class AllMeterActivity extends AppCompatActivity {
                         JSONObject jsonObject = new JSONObject(response.body().string());
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
-                            ToastUtil.ToastTextThread(AllMeterActivity.this,"设备删除成功");
+                            ToastUtil.ToastTextThread(AllMeterActivity.this,"仪表删除成功");
                             meterList.clear();
                             getData();
                             EventBus.getDefault().post(new MessageEvent());

@@ -7,8 +7,8 @@
     <android.support.v7.widget.CardView
         android:id="@+id/line1"
         android:layout_width="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content">
@@ -45,8 +45,8 @@
         android:layout_below="@id/line1"
         android:id="@+id/line2"
         android:layout_width="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_height="wrap_content">
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,8 +89,8 @@
         android:layout_below="@id/line2"
         android:id="@+id/line3"
         android:layout_width="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content">
@@ -111,7 +111,7 @@
                 </Spinner>
                 <Spinner
                     android:layout_gravity="center"
-                    android:id="@+id/spinner_meter"
+                    android:id="@+id/spinner_device"
                     android:layout_marginLeft="5dp"
                     android:padding="0dp"
                     android:layout_width="wrap_content"
@@ -136,24 +136,29 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp">
+                android:orientation="horizontal">
+                <Spinner
+                    android:layout_gravity="center"
+                    android:id="@+id/spinner_meter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                </Spinner>
                 <TextView
                     android:text="20"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
                     android:id="@+id/edit_start_year"
                     android:hint="19"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:singleLine="true"
                     android:inputType="number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:text="-"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
@@ -166,7 +171,7 @@
                     android:layout_height="wrap_content" />
                 <TextView
                     android:text="-"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
@@ -174,16 +179,16 @@
                     android:hint="04"
                     android:singleLine="true"
                     android:inputType="number"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
-                    android:text="~~"
+                    android:text="~"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:text="20"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
@@ -191,7 +196,7 @@
                     android:hint="20"
                     android:singleLine="true"
                     android:inputType="number"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
@@ -204,12 +209,12 @@
                     android:hint="04"
                     android:singleLine="true"
                     android:inputType="number"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
                     android:text="-"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <EditText
@@ -217,7 +222,7 @@
                     android:hint="04"
                     android:singleLine="true"
                     android:inputType="number"
-                    android:textSize="16sp"
+                    android:textSize="15sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>

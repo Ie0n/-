@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,10 +33,7 @@ import com.example.feng.version1.bean.Equipment;
 import com.example.feng.version1.bean.SiteTaskEquipment;
 import com.example.feng.version1.bean.User;
 import com.example.feng.version1.bean.lineChartBean;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -60,7 +56,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -79,16 +74,17 @@ public class TableFragment extends Fragment implements View.OnClickListener{
     private Myadapter arr_adapter,siteAdapter,taskAdapter,metersAdapter;
     private EditText start_year,start_month,start_day,end_year,end_month,end_day;
     private Button search_by_device,searchBySite,print,search_by_multi;
-    private String selectDevice,selectSite,selectTask,selectSite2,selectTask2,selectMeter;
+    private String selectDevice,selectSite,selectTask,selectSite2,selectDeviceId,selectMeter;
     private static final String DEVICE_URL = PublicData.DOMAIN+"/api/user/getAllDevices";
     private static final String METER_URL = PublicData.DOMAIN+"/api/user/getDataByDevice";
     private static final String LINE_URL = PublicData.DOMAIN+"/api/user/getMeterData";
     private static final String LOC_URL = PublicData.DOMAIN+"/api/user/getDataBySiteAndTask";
-    private static final String METERS_URL = PublicData.DOMAIN+"/api/user/getMeterBySite";
+    private static final String METERS_URL = PublicData.DOMAIN+"/api/user/getDeviceMetersB";
     private List<String> deviceNameList,siteList,taskList,meterList;
     private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
     private static final String [] SITELIST = {"站点一","站点二","站点三"};
     private List<String> deviceIdList;
+    private boolean isFirst = false;
     private List<lineChartBean> list = new ArrayList<>();
 
     private User user;
@@ -137,12 +133,29 @@ public class TableFragment extends Fragment implements View.OnClickListener{
         taskList.addAll(Arrays.asList(TASKLIST));
         getData();
         meterList = new ArrayList<>();
+        spinnerDevice.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectDeviceId = deviceIdList.get(position);
+                if (selectSite2.equals("选择设备")){
+                    return;
+                }
+                meterList.clear();
+                getMeters(deviceIdList.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 //发送提交数据查询的请求
                 //传进来的position 作为numlist的index
                 selectDevice = deviceIdList.get(position);
+
             }
 
             @Override
@@ -177,11 +190,6 @@ public class TableFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectSite2 = siteList.get(position);
-                if (selectSite2.equals("选择站点")){
-                    return;
-                }
-                meterList.clear();
-                getMeters(selectSite2);
             }
 
             @Override
@@ -202,10 +210,10 @@ public class TableFragment extends Fragment implements View.OnClickListener{
         });
     }
 
-    private void getMeters(String site){
+    private void getMeters(String deviceNo){
         HttpUrl.Builder builder = HttpUrl.parse(METERS_URL).newBuilder();
         builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
-                .addQueryParameter("site",site);
+                .addQueryParameter("deviceNo",deviceNo);
         final Request request = new Request
                 .Builder()
                 .url(builder.build())
@@ -304,10 +312,13 @@ public class TableFragment extends Fragment implements View.OnClickListener{
                                 deviceNameList.add(jsonObject2.optString("deviceName"));
                                 deviceIdList.add(jsonObject2.optString("deviceNo"));
                             }
-                            deviceIdList.add("1");
-                            deviceNameList.add("选择查看设备");
-                            taskList.add("选择任务");
-                            siteList.add("选择站点");
+                            if (!isFirst){
+                                deviceIdList.add("1");
+                                deviceNameList.add("选择设备");
+                                taskList.add("选择任务");
+                                siteList.add("选择站点");
+                            }
+                            isFirst = true;
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -319,9 +330,11 @@ public class TableFragment extends Fragment implements View.OnClickListener{
                                     arr_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     taskAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     siteAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
                                     //加载适配器
                                     spinnerSite2.setAdapter(siteAdapter);
 
+                                    spinnerDevice.setAdapter(arr_adapter);
                                     spinner.setAdapter(arr_adapter);
                                     spinnerTask.setAdapter(taskAdapter);
                                     spinnerSite.setAdapter(siteAdapter);
@@ -329,6 +342,7 @@ public class TableFragment extends Fragment implements View.OnClickListener{
                                     spinnerTask.setSelection(taskList.size()-1,true);
                                     spinnerSite.setSelection(siteList.size()-1,true);
                                     spinner.setSelection(deviceNameList.size()-1,true);
+                                    spinnerDevice.setSelection(deviceNameList.size()-1,true);
 
                                 }
                             });
@@ -349,6 +363,7 @@ public class TableFragment extends Fragment implements View.OnClickListener{
         table = view.findViewById(R.id.table);
         print = view.findViewById(R.id. btn_output_data);
         spinner = view.findViewById(R.id.spinner);
+        spinnerDevice = view.findViewById(R.id.spinner_device);
         spinnerSite2 = view.findViewById(R.id.spinner_site2);
         spinnerMeter = view.findViewById(R.id.spinner_meter);
         spinnerSite = view.findViewById(R.id.spinner_site);
@@ -462,7 +477,7 @@ public class TableFragment extends Fragment implements View.OnClickListener{
     private void getLineChartData(){
         HttpUrl.Builder builder = HttpUrl.parse(LINE_URL).newBuilder();
         builder.addQueryParameter("userNo",String.valueOf(user.getuserNo()))
-                .addQueryParameter("site",selectSite2)
+                .addQueryParameter("deviceNo",selectDeviceId)
                 .addQueryParameter("meterName",selectMeter)
                 .addQueryParameter("beginTime",getBeginTime())
                 .addQueryParameter("endTime",getEndTime());

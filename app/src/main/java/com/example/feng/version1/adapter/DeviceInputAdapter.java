@@ -25,13 +25,12 @@ public class DeviceInputAdapter  extends RecyclerView.Adapter<DeviceInputAdapter
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textSiteName,textMeterNo,textDeviceName;
+        private TextView textMeterNo,textDeviceName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textDeviceName = itemView.findViewById(R.id.txt_device_name);
             textMeterNo = itemView.findViewById(R.id.txt_meter_num);
-            textSiteName = itemView.findViewById(R.id.txt_site_name);
         }
 
     }
@@ -44,7 +43,6 @@ public class DeviceInputAdapter  extends RecyclerView.Adapter<DeviceInputAdapter
 
     @Override
     public void onBindViewHolder(@NonNull DeviceInputAdapter.ViewHolder viewHolder, final int position) {
-        viewHolder.textSiteName.setText(mData.get(position).getSite());
         viewHolder.textMeterNo.setText(mData.get(position).getMeterNo());
         viewHolder.textDeviceName.setText(mData.get(position).getDeviceName());
     }
