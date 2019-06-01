@@ -5,26 +5,29 @@ import com.bin.david.form.annotation.SmartTable;
 
 @SmartTable(name = "异常数据表")
 public class ErrorEquipment {
-    @SmartColumn(id = 1,name = "设备",autoMerge = true)
+    @SmartColumn(id = 1,name = "任务",autoMerge = true)
+    private String task;
+    @SmartColumn(id = 2,name = "设备",autoMerge = true)
     private String device;
     @SmartColumn(id = 0,name = "站点",autoMerge = true)
     private String site;
-    @SmartColumn(id = 2,name = "仪表",autoMerge = true)
+    @SmartColumn(id = 3,name = "仪表",autoMerge = true)
     private String tabId;
-    @SmartColumn(id = 3,name = "数据")
+    @SmartColumn(id = 4,name = "数据")
     private String tabNum;
-    @SmartColumn(id = 4,name = "时间")
+    @SmartColumn(id = 5,name = "时间")
     private String time;
-    @SmartColumn(id = 5,name = "录入人")
+    @SmartColumn(id = 6,name = "录入人")
     private String userName;
 
-    public ErrorEquipment(String id, String data, String time, String enterUserName, String site, String device){
+    public ErrorEquipment(String id, String data, String time, String enterUserName, String site, String device,String task){
         this.time = time;
         this.userName = enterUserName;
         this.tabNum = data;
         this.tabId = id;
         this.site = site;
         this.device = device;
+        this.task = task;
     }
 
     public String getDevice() {
@@ -73,5 +76,13 @@ public class ErrorEquipment {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
     }
 }

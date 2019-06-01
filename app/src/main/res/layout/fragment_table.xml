@@ -3,7 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <ImageView
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/lannn"/>
     <android.support.v7.widget.CardView
         android:id="@+id/line1"
         android:layout_width="match_parent"

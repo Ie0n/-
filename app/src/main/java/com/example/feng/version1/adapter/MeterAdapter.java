@@ -34,7 +34,7 @@ public class MeterAdapter  extends RecyclerView.Adapter<MeterAdapter.ViewHolder>
             itemView.setOnClickListener(this);
             onItemLongClickListener = onItemLongClick;
             itemView.setOnLongClickListener(this);
-            txtName = itemView.findViewById(R.id.text_item_equipment);
+            txtName = itemView.findViewById(R.id.text_item_equipment_1);
             textID = itemView.findViewById(R.id.text_device_id);
         }
 

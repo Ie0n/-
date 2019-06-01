@@ -43,8 +43,6 @@ import okhttp3.Response;
 import pub.devrel.easypermissions.EasyPermissions;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, EasyPermissions.PermissionCallbacks {
-
-
     private EditText username_edit;
     private EditText password_edit;
     private Button login_btn;
@@ -63,6 +61,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_login);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

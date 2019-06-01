@@ -37,7 +37,8 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:launchMode="singleInstance">
 
         <!-- （主）登录界面 -->
         <activity
@@ -54,19 +55,19 @@
             android:name=".Task.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Task.ReadNumber"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <!--扫码界面-->
         <activity
             android:name="com.yzq.testzxing.zxing.android.CaptureActivity"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="portrait" >
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name=".AddEquipmentActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Task.SelectTabActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".UserActivity" />
         <activity android:name=".EditUserInfoActivity" />
         <activity android:name=".AllDeviceActivity" />

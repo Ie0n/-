@@ -64,7 +64,7 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
     private static final String URL2 = PublicData.DOMAIN.concat("/api/user/getDevicesByTask");
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
     private static final String URL_DT = PublicData.DOMAIN+"/api/user/getDeviceByNoAndTask";
-    private static final String URL_EXIT = PublicData.DOMAIN+"/api/admin/existDevice";
+    private static final String URL_EXIT = PublicData.DOMAIN+"/api/user/existDevice";
     private static final String DECODED_CONTENT_KEY = "codedContent";
     private ArrayList<String> deviceList,deviceNameList;
     private static final int REQUEST_CODE_INPUT = 0x0001;
@@ -73,6 +73,10 @@ public class ChooseTaskInputActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         setContentView(R.layout.activity_choose_task_input);
         mContext = this;
         user = User.getInstance();

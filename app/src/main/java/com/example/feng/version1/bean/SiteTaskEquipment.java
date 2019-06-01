@@ -6,23 +6,29 @@ import com.bin.david.form.annotation.SmartTable;
 @SmartTable(name = "站点任务数据表")
 public class SiteTaskEquipment {
 
-    @SmartColumn(id = 0,name = "设备",autoMerge = true)
+    @SmartColumn(name = "站点",autoMerge = true)
+    private String site;
+    @SmartColumn(id = 1,name = "任务",autoMerge = true)
+    private String task;
+    @SmartColumn(id = 2,name = "设备",autoMerge = true)
     private String deviceName;
-    @SmartColumn(id = 1,name = "仪表",autoMerge = true)
+    @SmartColumn(id = 3,name = "仪表",autoMerge = true)
     private String meterName;
-    @SmartColumn(id = 2,name = "数据")
+    @SmartColumn(id = 4,name = "数据")
     private String data;
-    @SmartColumn(id = 3,name = "时间")
+    @SmartColumn(id = 5,name = "时间")
     private String time;
-    @SmartColumn(id = 4,name = "录入人")
+    @SmartColumn(id = 6,name = "录入人")
     private String inPerson;
 
-    public SiteTaskEquipment(String deviceName, String meterName, String data, String time, String inPerson) {
+    public SiteTaskEquipment(String deviceName, String meterName, String data, String time, String inPerson,String site,String task) {
         this.deviceName = deviceName;
         this.meterName = meterName;
         this.data = data;
         this.time = time;
         this.inPerson = inPerson;
+        this.site = site;
+        this.task = task;
     }
 
     public String getDeviceName() {
@@ -63,5 +69,21 @@ public class SiteTaskEquipment {
 
     public void setInPerson(String inPerson) {
         this.inPerson = inPerson;
+    }
+
+    public String getSite() {
+        return site;
+    }
+
+    public void setSite(String site) {
+        this.site = site;
+    }
+
+    public String getTask() {
+        return task;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
     }
 }

@@ -649,7 +649,9 @@ public class TableFragment extends Fragment implements View.OnClickListener{
                                         jsonObject2.optString("meterName"),
                                         jsonObject2.optString("data"),
                                         jsonObject2.getString("entryTime"),
-                                        jsonObject2.getString("entryUsername")
+                                        jsonObject2.getString("entryUsername"),
+                                        jsonObject2.getString("site"),
+                                        jsonObject2.getString("task")
                                         ));
                             }
                             getActivity().runOnUiThread(new Runnable() {
@@ -667,7 +669,7 @@ public class TableFragment extends Fragment implements View.OnClickListener{
                                     print.setVisibility(View.GONE);
                                 }
                             });
-                            locList.add(new SiteTaskEquipment("无","无","无","无","无"));
+                            locList.add(new SiteTaskEquipment("无","无","无","无","无","无","无"));
                         }
                         table.setData(locList);
                         table.getConfig().setColumnTitleStyle(new FontStyle(54,Color.BLUE));

@@ -8,17 +8,18 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_tab"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_margin="20dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
         android:translationZ="3dp"
         app:cardCornerRadius="10dp">
-        <TextView
-            android:id="@+id/text_item_equipment"
+        <EditText
+            android:id="@+id/text_item_equipment_1"
             android:layout_width="wrap_content"
             android:maxLines="1"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="18sp"
+            android:enabled="false"
             android:text="仪表1"/>
 
         <ImageView

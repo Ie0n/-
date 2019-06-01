@@ -10,7 +10,7 @@ public class User {
     private User(){
 
     }
-    public User (String userName,int userNo,String password){
+public User (String userName,int userNo,String password){
         this.userNo = userNo;
         this.userName = userName;
         this.password = password;

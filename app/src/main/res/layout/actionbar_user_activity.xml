@@ -19,4 +19,13 @@
         android:text="我的用户"
         android:textColor="#ffffff"
         android:textSize="20sp"/>
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/finish"
+        android:layout_centerInParent="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/finish"
+        android:layout_width="25dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true" />
 </RelativeLayout>

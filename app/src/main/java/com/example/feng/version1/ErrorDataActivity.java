@@ -58,6 +58,10 @@ public class ErrorDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         setContentView(R.layout.activity_error_data);
         mContext = this;
         user = User.getInstance();
@@ -123,7 +127,8 @@ public class ErrorDataActivity extends AppCompatActivity {
                                         jsonObject2.optString("entryTime"),
                                         jsonObject2.optString("entryUsername"),
                                         jsonObject2.optString("site"),
-                                        jsonObject2.optString("deviceName")
+                                        jsonObject2.optString("deviceName"),
+                                        jsonObject2.getString("task")
                                 ));
                             }
                             smartTable.setData(MeterList);

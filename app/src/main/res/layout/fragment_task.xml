@@ -18,141 +18,123 @@
             android:layout_width="match_parent"
             android:layout_height="270dp"
             android:background="#60ADADAD"/>
-
+        <TextView
+            android:id="@+id/main_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MachineRec"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:textStyle="bold"
+            android:typeface="monospace"
+            android:textSize="30dp"
+             />
+        <TextView
+            android:layout_below="@id/main_title1"
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="快速巡检的好帮手"
+            android:layout_centerHorizontal="true"
+            android:textSize="16dp"
+            android:textColor="@color/color_999999"
+            android:textStyle="bold"
+            android:typeface="monospace"/>
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sport_main_barlay"
+        android:id="@+id/sport_main_textt"
+        android:background="@drawable/textview_border"
+        android:padding="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+        <ImageView
+            android:id="@+id/img_text"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/main_text"/>
+        <TextView
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/img_text"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="点击记录数据，开始您今天的工作吧"
+            android:typeface="sans"/>
+    </RelativeLayout>
+    <!--字体样式serif,monospace,sans-->
 
     <!--在这里写任务界面的主要内容 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/sport_main_barlay"
+        android:layout_below="@id/sport_main_textt"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true">
-
-
-        <RelativeLayout
-
-            android:id="@+id/r1"
-            android:layout_width="330dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/line"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-
-            android:background="@color/dodgerblue"
-            android:padding="15dp">
-
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:background="@drawable/blet" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:text="点击记录数据>"
-                android:textSize="15sp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/line"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/r2"
-            android:layout_marginTop="30dp">
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:src="@mipmap/sport_icon" />
-
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/icon"
-                android:gravity="center"
-                android:text="记录数据"
-                android:textColor="@color/grey21"
-                android:textSize="16dp" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/line2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp">
-
-            <ImageView
-                android:id="@+id/icon2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:src="@mipmap/sport_icon" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_toRightOf="@id/icon2"
-                android:gravity="center"
-                android:text="录入设备"
-                android:textColor="@color/grey21"
-                android:textSize="16dp" />
-        </LinearLayout>
-
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
         <RelativeLayout
             android:id="@+id/r2"
-            android:layout_width="330dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/line2"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="84dp"
-            android:background="@color/lightsteelblue"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/main_jianbian_button1"
             android:padding="15dp">
 
-            <ImageView
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:background="@drawable/blet" />
-
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/dianjitext2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:text="点击录入设备>"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/white"/>
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/main_r2"
+                android:layout_alignRight="@+id/dianjitext2" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/r1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/r2"
+            android:background="@drawable/main_jianbian_button"
+            android:padding="15dp">
+            <TextView
+                android:id="@+id/dianjitext1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:text="点击记录数据>"
+                android:textSize="15sp"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/white"/>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignEnd="@+id/dianjitext1"
+                android:layout_centerVertical="true"
+                android:src="@drawable/main_r1"
+                android:layout_alignRight="@+id/dianjitext1" />
         </RelativeLayout>
 
+
     </RelativeLayout>
-
-
 </RelativeLayout>
 

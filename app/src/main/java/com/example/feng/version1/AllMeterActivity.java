@@ -60,6 +60,10 @@ public class AllMeterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         setContentView(R.layout.activity_meter_list);
         mContext = this;
         setEditCustomActionBar();

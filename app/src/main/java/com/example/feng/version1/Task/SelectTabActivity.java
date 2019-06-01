@@ -47,6 +47,10 @@ public class SelectTabActivity extends AppCompatActivity implements Callback,Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         setContentView(R.layout.activity_select_tab);
         mContext = this;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

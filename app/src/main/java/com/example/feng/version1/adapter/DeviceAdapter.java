@@ -1,11 +1,13 @@
 package com.example.feng.version1.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,24 +29,28 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
         inflater = LayoutInflater.from(context);
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnLongClickListener{
 
-        private TextView txtName,textID;
+        private TextView textID;
+        private EditText txtName;
 
-        public ViewHolder(@NonNull View itemView, OnItemListener listener, DeviceAdapter.onItemLongClickListener onItemLongClick) {
+        public ViewHolder(@NonNull View itemView,OnItemListener listener, DeviceAdapter.onItemLongClickListener onItemLongClick) {
             super(itemView);
             onItemListener = listener;
-            itemView.setOnClickListener(this);
             onItemLongClickListener = onItemLongClick;
+            itemView.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
-            txtName = itemView.findViewById(R.id.text_item_equipment);
+
             textID = itemView.findViewById(R.id.text_device_id);
+            txtName = itemView.findViewById(R.id.text_item_equipment_1);
         }
 
         @Override
         public void onClick(View v) {
             switch (v.getId()){
-                case R.id.text_item_equipment:{
+                case R.id.text_item_equipment_1:{
+
                     break;
                 }
                 default:{
@@ -62,13 +68,13 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
     }
     @NonNull
     @Override
-    public DeviceAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = inflater.inflate(R.layout.item_select_tab, viewGroup, false);
-        return new DeviceAdapter.ViewHolder(view,onItemListener,onItemLongClickListener);
+        return new ViewHolder(view,onItemListener,onItemLongClickListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DeviceAdapter.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder,int position) {
         viewHolder.txtName.setText(mData.get(position).getName());
         viewHolder.textID.setText(mData.get(position).getDeviceId());
     }
@@ -91,4 +97,6 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
     public void setOnItemLongClickListener(DeviceAdapter.onItemLongClickListener onItemLongClickListener) {
         this.onItemLongClickListener = onItemLongClickListener;
     }
+
+
 }

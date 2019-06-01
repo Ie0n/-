@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.Util.ToastUtil;
@@ -60,6 +61,10 @@ public class AllDeviceActivity extends AppCompatActivity {
     private String selectDevice;
     private static final String URL = PublicData.DOMAIN+"/api/user/getDevicesByTask";
     private static final String DELETE_URL = PublicData.DOMAIN+"/api/admin/deleteDevice";
+
+    // TODO: 这是URL,参数：userNo:String.valueOf(user.getuserNo()) , deviceNo:deviceNoList.get(position),newName就是那个EditText的新名字
+    private static final String EDIT_URL = PublicData.DOMAIN+"/api/admin/changeDeviceName";
+
     private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
     private List<String> taskList;
 
@@ -177,6 +182,7 @@ public class AllDeviceActivity extends AppCompatActivity {
                                             showPopWindows(view,id,name);
                                         }
                                     });
+                                    // TODO: 这里设置点击事件，点了之后设置EditText的可编辑状态，然后点勾的时候把当前EditText的文本上传
                                     adapter.setOnItemListener(new DeviceAdapter.OnItemListener() {
                                         @Override
                                         public void onItemClick(View view, int position) {
@@ -205,6 +211,14 @@ public class AllDeviceActivity extends AppCompatActivity {
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
         View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_user_activity, null);
         TextView textView = mActionBarView.findViewById(R.id.title);
+        ImageView finish = mActionBarView.findViewById(R.id.finish);
+        // TODO: 上传数据是给这个finish设置点击事件和可见性
+        finish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         textView.setText("已录入设备");
         getSupportActionBar().setCustomView(mActionBarView, lp);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);

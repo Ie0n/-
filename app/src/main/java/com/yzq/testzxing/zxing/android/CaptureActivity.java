@@ -78,6 +78,10 @@ public final class CaptureActivity extends Activity implements
         // 保持Activity处于唤醒状态
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         setContentView(R.layout.capture);
 
         hasSurface = false;

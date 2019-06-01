@@ -55,7 +55,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     private Context mContext;
     private RelativeLayout add;
     private RelativeLayout input;
-    private LinearLayout linearLayout;
 
     private static final String URL = PublicData.DOMAIN+"/api/user/getAllDevices";
     private ArrayList<String> deviceList,deviceNameList;
@@ -96,7 +95,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     }
     private void initView(View view){
         add = view.findViewById(R.id.r1);
-        linearLayout = view.findViewById(R.id.line2);
         add.setOnClickListener(this);
         input = view.findViewById(R.id.r2);
         input.setOnClickListener(this);
@@ -110,7 +108,6 @@ public class TaskFragment extends Fragment implements View.OnClickListener {
     private void setVisible(){
         if (user.getAdmin() == 0){
             input.setVisibility(View.GONE);
-            linearLayout.setVisibility(View.GONE);
         }
     }
 

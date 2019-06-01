@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ImageView
+        android:id="@+id/my_img0"
+        android:scaleType="fitXY"
+        android:layout_width="match_parent"
+        android:layout_height="270dp"
+        android:src="@drawable/my_background"/>
 
     <android.support.v7.widget.CardView
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="100dp"
         android:id="@+id/card_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:translationZ="3dp">
+        android:translationZ="3dp"
+        app:cardBackgroundColor="@color/colorPrimary">
         <TextView
             android:layout_margin="10dp"
             android:textSize="17sp"
             android:text="当前用户"
+            android:textColor="@color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
         <LinearLayout
             android:padding="10dp"
             android:layout_width="match_parent"
@@ -32,13 +43,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="用户名："/>
+                    android:text="用户名："
+                    android:textColor="@color/white"/>
                 <TextView
                     android:id="@+id/text_user_name"
-                    android:text="dd"
+                    android:text="Account"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"/>
             </LinearLayout>
 
             <LinearLayout
@@ -50,13 +63,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="帐号："
-                    android:textSize="18sp"/>
+                    android:textSize="18sp"
+                    android:textColor="@color/white"/>
                 <TextView
                     android:id="@+id/text_user_id"
-                    android:text="dd"
+                    android:text="Code"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"/>
 
             </LinearLayout>
 
@@ -64,65 +79,128 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <Button
-        android:layout_below="@id/card_id"
-        android:layout_marginTop="40dp"
-        android:id="@+id/manager"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="管理用户"
-        android:textColor="@color/yellow"
-        android:background="@drawable/shape_btn"
-        android:visibility="gone"
-        android:textSize="18sp"/>
-    <Button
-        android:layout_marginTop="30dp"
-        android:id="@+id/btn_excel_out"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_below="@id/manager"
-        android:background="@drawable/shape_btn"
-        android:text="导出所有数据"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:layout_marginTop="30dp"
-        android:id="@+id/btn_in_device"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_below="@id/btn_excel_out"
-        android:background="@drawable/shape_btn"
-        android:text="已录入设备"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:layout_marginTop="30dp"
-        android:id="@+id/btn_un_usual_data"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_below="@id/btn_in_device"
-        android:background="@drawable/shape_btn"
-        android:text="异常数据"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-    <Button
-        android:layout_marginBottom="70dp"
-        android:layout_marginLeft="70dp"
-        android:layout_marginRight="70dp"
-        android:layout_alignParentBottom="true"
-        android:textColor="@color/white"
-        android:text="退出"
-        android:background="@drawable/shape_btn"
-        android:textSize="16sp"
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    <GridLayout
+        android:layout_width="302dp"
+        android:layout_height="307dp"
+        android:layout_below="@id/my_img0"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="30dp"
+        android:columnCount="2"
+        android:orientation="vertical"
+        android:padding="2dp"
+        android:rowCount="2"
+        android:layout_centerHorizontal="true" >
+
+        <LinearLayout
+            android:id="@+id/btn_excel_out"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="#00000000"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/daochu"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:text="导出数据"
+                android:textColor="@color/green_0"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/manager"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:background="#00000000"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/guanli"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:text="管理用户"
+                android:textColor="@color/oxygen_backgound"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:background="#00000000"
+            android:orientation="vertical"
+            android:id="@+id/btn_un_usual_data">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/yichang"
+                android:layout_gravity="center"/>
+
+            <Button
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:text="异常数据"
+                android:textColor="@color/orange_0"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="10dp"
+            android:background="#00000000"
+            android:orientation="vertical"
+            android:id="@+id/logout">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/tuichu"
+                android:layout_gravity="center"/>
+
+            <Button
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:text="退出"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:background="#00000000"
+            android:id="@+id/btn_in_device"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:background="@drawable/dianbao"
+                android:layout_gravity="center"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:text="已录设备"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </GridLayout>
 </RelativeLayout>

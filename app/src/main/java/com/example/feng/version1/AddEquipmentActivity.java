@@ -60,6 +60,10 @@ public class AddEquipmentActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        if (!isTaskRoot()) {
+//            finish();
+//            return;
+//        }
         setContentView(R.layout.activity_add_equipment);
         SoftHideKeyBoardUtil.assistActivity(this);
         mContext = this;
