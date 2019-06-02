@@ -1,6 +1,7 @@
 package com.example.feng.version1;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,10 +19,12 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
 import com.example.feng.version1.Util.ToastUtil;
@@ -39,9 +43,11 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AllMeterActivity extends AppCompatActivity {
@@ -53,9 +59,11 @@ public class AllMeterActivity extends AppCompatActivity {
     private Context mContext;
     private User user;
     private String deviceNo,task;
+    private List<String> meterNoList = new ArrayList<>();
     private MeterAdapter adapter;
     private static final String URL = PublicData.DOMAIN+"/api/user/getDeviceMetersA";
     private static final String DELETE_URL = PublicData.DOMAIN+"/api/admin/deleteMeter";
+    private static final String EDIT_URL = PublicData.DOMAIN+"/api/admin/changeMeterName";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,6 +89,47 @@ public class AllMeterActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         meterList = new ArrayList<>();
         getData();
+    }
+    private void post(String name, final int position) {
+        RequestBody body = new FormBody.Builder()
+                .add("userNo",String.valueOf(user.getuserNo()))
+                .add("meterId",meterNoList.get(position))
+                .add("newName",name)
+                .build();
+        final Request request = new Request
+                .Builder()
+                .url(EDIT_URL)
+                .post(body)
+                .header("Cookie", getCookie())
+                .build();
+        final OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+
+                    String result = response.body().string();
+                    try {
+                        JSONObject jsonObject = new JSONObject(result);
+                        int status = jsonObject.getInt("status");
+                        if (status == 1200){
+                            ToastUtil.ToastTextThread(AllMeterActivity.this,"修改成功");
+                            getData();
+                        }else if (status == 1404){
+                            ToastUtil.ToastTextThread(AllMeterActivity.this,"参数错误/设备不存在");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     @NonNull
@@ -132,6 +181,13 @@ public class AllMeterActivity extends AppCompatActivity {
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("meters");
 
+                            meterNoList.clear();
+                            for (int i = 0; i < array.length(); i++) {
+                                JSONObject jsonObject2 = (JSONObject)array.get(i);
+                                meterNoList.add(jsonObject2.optString("meterId"));
+                            }
+
+                            meterList.clear();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 meterList.add(new Meter(
@@ -143,16 +199,24 @@ public class AllMeterActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     adapter = new MeterAdapter(mContext,meterList);
-                                    adapter.setOnItemLongClickListener(new MeterAdapter.onItemLongClickListener() {
+                                    adapter.setOnItemClickListener(new MeterAdapter.OnItemClickListener() {
                                         @Override
-                                        public void onItemLongClick(View view, int position, String id) {
-                                            showPopWindows(view,id);
+                                        public void onImageClick(EditText name, int position) {
+                                            String Cname = name.getText().toString();
+                                            showDialog(Cname,position);
                                         }
-                                    });
-                                    adapter.setOnItemListener(new MeterAdapter.OnItemListener() {
-                                        @Override
-                                        public void onItemClick(View view, int position) {
 
+                                        @Override
+                                        public void onTextClick(View v, EditText ed, ImageView imageView, int position) {
+                                            ed.setCursorVisible(true);
+                                            ed.setFocusable(true);
+                                            ed.setFocusableInTouchMode(true);
+                                            imageView.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onItemLongClick(View v, int position, String id) {
+                                            showPopWindows(v,id);
                                         }
                                     });
                                     recyclerView.setAdapter(adapter);
@@ -167,6 +231,29 @@ public class AllMeterActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void showDialog(final String name, final int position){
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setIcon(R.mipmap.icon)
+                .setTitle("提示")
+                .setMessage("是否修改当前仪表名称")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getData();
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        post(name,position);
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
     }
     private void setEditCustomActionBar() {
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
@@ -219,6 +306,7 @@ public class AllMeterActivity extends AppCompatActivity {
     private void setNoDataImg(){
         linearLayout.setVisibility(View.VISIBLE);
     }
+
     private void deleteMeter(String id){
         HttpUrl.Builder builder = HttpUrl.parse(DELETE_URL).newBuilder();
         builder
@@ -247,7 +335,6 @@ public class AllMeterActivity extends AppCompatActivity {
                         int status = jsonObject.getInt("status");
                         if (status == 1200){
                             ToastUtil.ToastTextThread(AllMeterActivity.this,"仪表删除成功");
-                            meterList.clear();
                             getData();
                             EventBus.getDefault().post(new MessageEvent());
                         }else if (status == 1404){

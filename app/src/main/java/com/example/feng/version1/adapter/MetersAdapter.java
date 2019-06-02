@@ -28,15 +28,13 @@ public class MetersAdapter extends RecyclerView.Adapter<MetersAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView txtName;
-        private ImageView confirm;
 
         public ViewHolder(@NonNull View itemView,OnItemListener listener) {
             super(itemView);
             onItemListener = listener;
             itemView.setOnClickListener(this);
-            txtName = itemView.findViewById(R.id.text_item_equipment);
+            txtName = itemView.findViewById(R.id.text_item_equipment_1);
             txtName.setOnClickListener(this);
-            confirm = itemView.findViewById(R.id.img_confirm_in);
         }
 
         @Override

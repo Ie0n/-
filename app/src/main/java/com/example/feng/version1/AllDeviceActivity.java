@@ -1,6 +1,7 @@
 package com.example.feng.version1;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.feng.version1.Public.PublicData;
+import com.example.feng.version1.Task.ReadNumber;
 import com.example.feng.version1.Util.ToastUtil;
 import com.example.feng.version1.adapter.DeviceAdapter;
 import com.example.feng.version1.bean.Equipment;
@@ -43,9 +47,11 @@ import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AllDeviceActivity extends AppCompatActivity {
@@ -58,11 +64,12 @@ public class AllDeviceActivity extends AppCompatActivity {
     private User user;
     private Spinner spinner;
     private Myadapter arr_adapter;
+    private ImageView finish;
     private String selectDevice;
+    private List<String> deviceNoList = new ArrayList<>();
     private static final String URL = PublicData.DOMAIN+"/api/user/getDevicesByTask";
     private static final String DELETE_URL = PublicData.DOMAIN+"/api/admin/deleteDevice";
 
-    // TODO: 这是URL,参数：userNo:String.valueOf(user.getuserNo()) , deviceNo:deviceNoList.get(position),newName就是那个EditText的新名字
     private static final String EDIT_URL = PublicData.DOMAIN+"/api/admin/changeDeviceName";
 
     private static final String [] TASKLIST = {"例行任务","监督任务","全面任务","熄灯任务","特殊任务"};
@@ -96,6 +103,7 @@ public class AllDeviceActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 deviceList.clear();
+                selectDevice = taskList.get(position);
                 getData(taskList.get(position));
             }
 
@@ -149,7 +157,7 @@ public class AllDeviceActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(final Call call, Response response) throws IOException {
                 if (response.body() != null && response.isSuccessful()) {
                     try {
                         JSONObject jsonObject = new JSONObject(response.body().string());
@@ -158,12 +166,13 @@ public class AllDeviceActivity extends AppCompatActivity {
                             JSONObject data = jsonObject.getJSONObject("data");
                             JSONArray array = data.getJSONArray("devices");
 
-                            final List<String> deviceNoList = new ArrayList<>();
+                            deviceNoList.clear();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 deviceNoList.add(jsonObject2.optString("deviceNo"));
                             }
 
+                            deviceList.clear();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject jsonObject2 = (JSONObject)array.get(i);
                                 deviceList.add(new Equipment(
@@ -174,23 +183,36 @@ public class AllDeviceActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-
                                     adapter = new DeviceAdapter(mContext,deviceList);
-                                    adapter.setOnItemLongClickListener(new DeviceAdapter.onItemLongClickListener() {
+                                    adapter.setOnItemClickListener(new DeviceAdapter.OnItemClickListener() {
+
+
                                         @Override
-                                        public void onItemLongClick(View view, int position, String id,String name) {
-                                            showPopWindows(view,id,name);
-                                        }
-                                    });
-                                    // TODO: 这里设置点击事件，点了之后设置EditText的可编辑状态，然后点勾的时候把当前EditText的文本上传
-                                    adapter.setOnItemListener(new DeviceAdapter.OnItemListener() {
-                                        @Override
-                                        public void onItemClick(View view, int position) {
+                                        public void onItemClick(View v, int position) {
                                             Intent intent = new Intent();
                                             intent.setClass(mContext,AllMeterActivity.class);
                                             intent.putExtra("task",task);
                                             intent.putExtra("deviceNo",deviceNoList.get(position));
                                             startActivity(intent);
+                                        }
+
+                                        @Override
+                                        public void onImageClick(EditText name, int position) {
+                                            String Cname = name.getText().toString();
+                                            showDialog(Cname,position);
+                                        }
+
+                                        @Override
+                                        public void onTextClick(View v, EditText ed,ImageView imageView, int position) {
+                                            ed.setCursorVisible(true);
+                                            ed.setFocusable(true);
+                                            ed.setFocusableInTouchMode(true);
+                                            imageView.setVisibility(View.VISIBLE);
+                                        }
+
+                                        @Override
+                                        public void onItemLongClick(View v, int position, String id, String name) {
+                                            showPopWindows(v,id,name);
                                         }
                                     });
                                     recyclerView.setAdapter(adapter);
@@ -211,14 +233,6 @@ public class AllDeviceActivity extends AppCompatActivity {
         ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
         View mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_user_activity, null);
         TextView textView = mActionBarView.findViewById(R.id.title);
-        ImageView finish = mActionBarView.findViewById(R.id.finish);
-        // TODO: 上传数据是给这个finish设置点击事件和可见性
-        finish.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         textView.setText("已录入设备");
         getSupportActionBar().setCustomView(mActionBarView, lp);
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -254,6 +268,74 @@ public class AllDeviceActivity extends AppCompatActivity {
                 deleteDevice(id);
                 if (mPopWindow != null) {
                     mPopWindow.dismiss();
+                }
+            }
+        });
+    }
+
+    private void showDialog(final String name, final int position){
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setIcon(R.mipmap.icon)
+                .setTitle("提示")
+                .setMessage("是否修改当前设备名称")
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        getData(selectDevice);
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        post(name,position);
+                        dialog.dismiss();
+                    }
+                }).create();
+        dialog.show();
+    }
+
+    private void post(String name, final int position) {
+        RequestBody body = new FormBody.Builder()
+                .add("userNo",String.valueOf(user.getuserNo()))
+                .add("deviceNo",deviceNoList.get(position))
+                .add("newName",name)
+                .build();
+        final Request request = new Request
+                .Builder()
+                .url(EDIT_URL)
+                .post(body)
+                .header("Cookie", getCookie())
+                .build();
+        final OkHttpClient client = new OkHttpClient();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("fail","获取数据失败");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.body() != null && response.isSuccessful()) {
+                    String result = response.body().string();
+                    Log.d("ddddd",result);
+
+                    try {
+                        JSONObject jsonObject = new JSONObject();
+                        int status = jsonObject.getInt("status");
+                        if (status == 1200){
+                            ToastUtil.ToastTextThread(AllDeviceActivity.this,"修改成功");
+                            getData(selectDevice);
+                        }else if (status == 1404){
+                            ToastUtil.ToastTextThread(AllDeviceActivity.this,"参数错误/设备不存在");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             }
         });
@@ -296,8 +378,6 @@ public class AllDeviceActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-
                 }
             }
         });

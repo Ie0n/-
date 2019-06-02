@@ -17,66 +17,82 @@ import com.example.feng.version1.bean.StatusResponse;
 
 import java.util.List;
 
-public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolder>{
+public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolder> {
 
-    private LayoutInflater inflater;
     private List<Equipment> mData;
-    private DeviceAdapter.OnItemListener onItemListener;
-    private DeviceAdapter.onItemLongClickListener onItemLongClickListener;
+    private Context mContext;
 
     public DeviceAdapter(Context context, List<Equipment> data) {
         mData = data;
-        inflater = LayoutInflater.from(context);
+        mContext = context;
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener ,View.OnLongClickListener{
+    public interface OnItemClickListener  {
+        void onItemClick(View v,int position);
+        void onImageClick(EditText name,int position);
+        void onTextClick(View v,EditText ed,ImageView imageView,int position);
+        void onItemLongClick(View v,int position,String id,String name);
+    }
 
-        private TextView textID;
-        private EditText txtName;
+    private OnItemClickListener mOnItemClickListener;
 
-        public ViewHolder(@NonNull View itemView,OnItemListener listener, DeviceAdapter.onItemLongClickListener onItemLongClick) {
+    //定义方法并传给外面的使用者
+    public void setOnItemClickListener(OnItemClickListener  listener) {
+        this.mOnItemClickListener  = listener;
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder{
+
+        TextView textID;
+        EditText txtName;
+        ImageView confirm;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            onItemListener = listener;
-            onItemLongClickListener = onItemLongClick;
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-
             textID = itemView.findViewById(R.id.text_device_id);
             txtName = itemView.findViewById(R.id.text_item_equipment_1);
+            confirm = itemView.findViewById(R.id.img_confirm_in);
         }
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.text_item_equipment_1:{
-
-                    break;
-                }
-                default:{
-                    onItemListener.onItemClick(v, getPosition());
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            onItemLongClickListener.onItemLongClick(v,getPosition(),textID.getText().toString(),txtName.getText().toString());
-            return true;
-        }
     }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = inflater.inflate(R.layout.item_select_tab, viewGroup, false);
-        return new ViewHolder(view,onItemListener,onItemLongClickListener);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_select_tab, viewGroup, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder,int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int position) {
         viewHolder.txtName.setText(mData.get(position).getName());
         viewHolder.textID.setText(mData.get(position).getDeviceId());
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(v,position);
+            }
+        });
+        viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mOnItemClickListener.onItemLongClick(v,position,viewHolder.textID.getText().toString(),viewHolder.txtName.getText().toString());
+                return true;
+            }
+        });
+        viewHolder.txtName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onTextClick(v,viewHolder.txtName,viewHolder.confirm,position);
+            }
+        });
+        viewHolder.confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onImageClick(viewHolder.txtName,position);
+            }
+        });
     }
 
     @Override
@@ -84,19 +100,6 @@ public class DeviceAdapter  extends RecyclerView.Adapter<DeviceAdapter.ViewHolde
         return mData.size();
     }
 
-    public void setOnItemListener(DeviceAdapter.OnItemListener onItemListener) {
-        this.onItemListener = onItemListener;
-    }
-
-    public interface OnItemListener{
-        void onItemClick(View view, int position);
-    }
-    public interface onItemLongClickListener{
-        void onItemLongClick(View view,int position,String id,String name);
-    }
-    public void setOnItemLongClickListener(DeviceAdapter.onItemLongClickListener onItemLongClickListener) {
-        this.onItemLongClickListener = onItemLongClickListener;
-    }
 
 
 }

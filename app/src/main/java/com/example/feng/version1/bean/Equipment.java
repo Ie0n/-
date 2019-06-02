@@ -9,7 +9,6 @@ public class Equipment {
     private String deviceName;
     private String meterName;
     private String deviceId;
-    private String task;
     private Long id;
     private Double up,low;
 
@@ -41,15 +40,17 @@ public class Equipment {
         this.deviceId = id;
     }
 
-    @SmartColumn(id = 0,name = "站点",autoMerge = true)
+    @SmartColumn(name = "站点",autoMerge = true)
     private String site;
-    @SmartColumn(id = 1,name = "仪表",autoMerge = true)
+    @SmartColumn(id = 1,name = "任务",autoMerge = true)
+    private String task;
+    @SmartColumn(id = 2,name = "仪表",autoMerge = true)
     private String tabId;
-    @SmartColumn(id = 2,name = "数据")
+    @SmartColumn(id = 3,name = "数据")
     private String tabNum;
-    @SmartColumn(id = 3,name = "时间")
+    @SmartColumn(id = 4,name = "时间")
     private String time;
-    @SmartColumn(id = 4,name = "录入人")
+    @SmartColumn(id = 5,name = "录入人")
     private String userName;
 
     public String getName() {

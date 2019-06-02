@@ -58,7 +58,7 @@ public class ChooseDeviceActivity extends AppCompatActivity{
     private ArrayList<String> deviceList,deviceNameList;
     private String site,task;
 
-    private static final String URL_EXIT = PublicData.DOMAIN+"/api/admin/existDevice";
+    private static final String URL_EXIT = PublicData.DOMAIN+"/api/user/existDevice";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
